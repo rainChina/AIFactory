@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YW64+EjrkWk=",
+  "dgSpecHash": "CzDf7k0ZRrQ=",
   "success": true,
-  "projectFilePath": "C:\\Learning\\LSTMProject\\AIFactory\\AIFactory\\AIFactory.csproj",
+  "projectFilePath": "C:\\Learning\\git_projects\\AIFactory\\AIFactory\\AIFactory.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\zhenyao2\\.nuget\\packages\\communitytoolkit.mvvm\\8.4.0\\communitytoolkit.mvvm.8.4.0.nupkg.sha512",
     "C:\\Users\\zhenyao2\\.nuget\\packages\\handycontrols\\3.6.0\\handycontrols.3.6.0.nupkg.sha512",

@@ -891,11 +891,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Learning\\LSTMProject\\AIFactory\\AIFactory\\AIFactory.csproj",
+      "projectUniqueName": "C:\\Learning\\git_projects\\AIFactory\\AIFactory\\AIFactory.csproj",
       "projectName": "AIFactory",
-      "projectPath": "C:\\Learning\\LSTMProject\\AIFactory\\AIFactory\\AIFactory.csproj",
+      "projectPath": "C:\\Learning\\git_projects\\AIFactory\\AIFactory\\AIFactory.csproj",
       "packagesPath": "C:\\Users\\zhenyao2\\.nuget\\packages\\",
-      "outputPath": "C:\\Learning\\LSTMProject\\AIFactory\\AIFactory\\obj\\",
+      "outputPath": "C:\\Learning\\git_projects\\AIFactory\\AIFactory\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -5,7 +5,13 @@
     <Compile Update="View\ViewChart.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\ViewPageChart.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\WinDigitalScreen.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="View\WinPLCWriter.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

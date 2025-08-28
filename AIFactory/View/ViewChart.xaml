@@ -4,19 +4,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AIFactory.View" xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.WPF;assembly=LiveChartsCore.SkiaSharpView.WPF"
-             mc:Ignorable="d" 
+             mc:Ignorable="d" xmlns:hc="https://handyorg.github.io/handycontrol"
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <TabControl TabStripPlacement="Bottom" Margin="0">
+        <TabControl TabStripPlacement="Bottom"  Margin="0" Style="{StaticResource TabControlCapsule}">
             <TabItem Header="Title" HeaderStringFormat="{}{0}1">
-                <lvc:CartesianChart Series="{Binding Series}" Title="{Binding LTitle}"/>
+                <lvc:CartesianChart Series="{Binding Series}" Title="{Binding TitleCarbonReductionAmount}"/>
             </TabItem>
             <TabItem Header="Title" HeaderStringFormat="{}{0}2" IsEnabled="False">
-                <lvc:CartesianChart Series="{Binding TemperatureSeries}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Title="{Binding PTTitle}"/>
+                <lvc:CartesianChart Series="{Binding TemperatureSeries}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Title="{Binding TitleRealtimeProgress}"/>
             </TabItem>
             <TabItem Header="Title" HeaderStringFormat="{}{0}3">
                 <lvc:CartesianChart Grid.Row="1" Series="{Binding GassRationSeries}" Title="{Binding XTitle}"/>
@@ -25,7 +25,5 @@
                 <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Series="{Binding predictionSeries}" Title="{Binding PredictTitle}"/>
             </TabItem>
         </TabControl>
-        
-        
     </Grid>
 </UserControl>
