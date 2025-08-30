@@ -3,10 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AIFactory" xmlns:view="clr-namespace:AIFactory.View"
-        mc:Ignorable="d"
+        xmlns:local="clr-namespace:AIFactory" xmlns:view="clr-namespace:AIFactory.View" xmlns:viewmodel="clr-namespace:AIFactory.ViewModel"
+           mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid Name="host">
+        <Grid.DataContext>
+            <viewmodel:ViewModelMainWindow/>
+        </Grid.DataContext>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="1.2*"></RowDefinition>
@@ -18,7 +21,7 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <Image Source="/Steel.png" Margin="0,10"></Image>
-            <Grid Grid.Row="1">
+            <!--<Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
@@ -77,11 +80,11 @@
                     </StackPanel>
                 </Grid>
 
-            </Grid>
+            </Grid>-->
+            <view:ViewDashboard Grid.Row="1"/>
             <StackPanel Orientation="Horizontal" Grid.Row="2">
-                <Button Style="{StaticResource ButtonPrimary}" Content=" Process" Width="100" Margin="10,5,5,10" />
-                <Button Style="{StaticResource ButtonSuccess}" Content="Curve"  Width="100" Margin="10,5,5,10"/>
-                <Button Style="{StaticResource ButtonSuccess}" Content="configure"  Width="100" Margin="10,5,5,10"/>
+                <Button Style="{StaticResource ButtonPrimary}" Content=" Process" Width="100" Margin="10,5,5,10" Command="{Binding DigitalScreenShowCommand}"/>
+                <Button Style="{StaticResource ButtonSuccess}" Content="set"  Width="100" Margin="10,5,5,10" Command="{Binding IncrementCounterCommand}"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">

@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace AIFactory.View
 {
     /// <summary>
-    /// Interaction logic for WinPLCWriter.xaml
+    /// Interaction logic for ViewDashboard.xaml
     /// </summary>
-    public partial class WinPLCWriter
+    public partial class ViewDashboard : UserControl
     {
-        public WinPLCWriter()
+        public ViewDashboard()
         {
             InitializeComponent();
         }

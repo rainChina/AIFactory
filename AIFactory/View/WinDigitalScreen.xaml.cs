@@ -17,7 +17,7 @@ namespace AIFactory.View
     /// <summary>
     /// Interaction logic for WinDigitalScreen.xaml
     /// </summary>
-    public partial class WinDigitalScreen : Window
+    public partial class WinDigitalScreen
     {
         public WinDigitalScreen()
         {
