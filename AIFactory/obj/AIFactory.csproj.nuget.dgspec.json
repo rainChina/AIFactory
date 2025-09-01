@@ -66,6 +66,14 @@
             "Microsoft.Extensions.DependencyInjection": {
               "target": "Package",
               "version": "[10.0.0-preview.7.25380.108, )"
+            },
+            "OPCFoundation.NetStandard.Opc.Ua": {
+              "target": "Package",
+              "version": "[1.5.376.244, )"
+            },
+            "OPCFoundation.NetStandard.Opc.Ua.Client": {
+              "target": "Package",
+              "version": "[1.5.376.244, )"
             }
           },
           "imports": [

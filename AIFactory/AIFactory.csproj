@@ -13,6 +13,8 @@
     <PackageReference Include="HandyControls" Version="3.6.0" />
     <PackageReference Include="LiveChartsCore.SkiaSharpView.WPF" Version="2.0.0-rc5.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-preview.7.25380.108" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua" Version="1.5.376.244" />
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.244" />
   </ItemGroup>
 
   <ItemGroup>
