@@ -101,7 +101,6 @@
                 <Ellipse Fill="Green" Width="50" Height="50"  HorizontalAlignment="Center" VerticalAlignment="Center">
                 </Ellipse>
                 <TextBlock Text="10" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-
                 <hc:SimpleText Grid.Row="1" Foreground="White" Text="碳命中预测" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="18"/>
             </Grid>
             <Grid Grid.Column="1">

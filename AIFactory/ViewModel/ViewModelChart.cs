@@ -16,6 +16,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using LiveChartsCore.Defaults;
+using LiveChartsCore.Kernel.Sketches;
 
 namespace AIFactory.ViewModel
 {
@@ -82,7 +83,7 @@ namespace AIFactory.ViewModel
 
         #endregion
 
-        #region
+        #region Series
         public ISeries[] predictionSeries { get; set; }
         public ISeries[] GassRationSeries { get; set; }
 
@@ -165,7 +166,31 @@ namespace AIFactory.ViewModel
             };
         }
 
+
+        public ICartesianAxis[] XAxes { get; set; } = new ICartesianAxis[] 
+        {
+            new Axis
+            {
+
+                CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
+                CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed),
+                CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
+                Labeler = value => value.ToString("N2")
+            }
+        };
+
+        public ICartesianAxis[] YAxes { get; set; } = new ICartesianAxis[] {
+            new Axis
+        {
+            CrosshairLabelsBackground = SKColors.DarkOrange.AsLvcColor(),
+            CrosshairLabelsPaint = new SolidColorPaint(SKColors.DarkRed),
+            CrosshairPaint = new SolidColorPaint(SKColors.DarkOrange, 1),
+            CrosshairSnapEnabled = true // snapping is also supported
+        }
+        };
+
         #endregion
+
 
         private void ClearDataCollection()
         {

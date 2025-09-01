@@ -1,16 +1,20 @@
 {
   "version": 3,
   "targets": {
-    "net9.0-windows7.0": {
+    "net7.0-windows8.0": {
       "CommunityToolkit.Mvvm/8.4.0": {
         "type": "package",
+        "dependencies": {
+          "System.ComponentModel.Annotations": "5.0.0",
+          "System.Runtime.CompilerServices.Unsafe": "6.1.0"
+        },
         "compile": {
-          "lib/net8.0/CommunityToolkit.Mvvm.dll": {
+          "lib/netstandard2.1/CommunityToolkit.Mvvm.dll": {
             "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net8.0/CommunityToolkit.Mvvm.dll": {
+          "lib/netstandard2.1/CommunityToolkit.Mvvm.dll": {
             "related": ".pdb;.xml"
           }
         },
@@ -18,15 +22,23 @@
           "buildTransitive/CommunityToolkit.Mvvm.targets": {}
         }
       },
+      "HandyControl.Lang.en/3.5.1": {
+        "type": "package",
+        "resource": {
+          "lib/net7.0/en/HandyControl.resources.dll": {
+            "locale": "en"
+          }
+        }
+      },
       "HandyControls/3.6.0": {
         "type": "package",
         "compile": {
-          "lib/net9.0/HandyControl.dll": {
+          "lib/net7.0/HandyControl.dll": {
             "related": ".deps.json;.pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net9.0/HandyControl.dll": {
+          "lib/net7.0/HandyControl.dll": {
             "related": ".deps.json;.pdb;.xml"
           }
         }
@@ -38,12 +50,12 @@
           "HarfBuzzSharp.NativeAssets.macOS": "8.3.0.1"
         },
         "compile": {
-          "lib/net8.0/HarfBuzzSharp.dll": {
+          "lib/net6.0/HarfBuzzSharp.dll": {
             "related": ".pdb"
           }
         },
         "runtime": {
-          "lib/net8.0/HarfBuzzSharp.dll": {
+          "lib/net6.0/HarfBuzzSharp.dll": {
             "related": ".pdb"
           }
         }
@@ -51,10 +63,10 @@
       "HarfBuzzSharp.NativeAssets.macOS/8.3.0.1": {
         "type": "package",
         "compile": {
-          "lib/net8.0/_._": {}
+          "lib/net6.0/_._": {}
         },
         "runtime": {
-          "lib/net8.0/_._": {}
+          "lib/net6.0/_._": {}
         },
         "runtimeTargets": {
           "runtimes/osx/native/libHarfBuzzSharp.dylib": {
@@ -66,10 +78,10 @@
       "HarfBuzzSharp.NativeAssets.Win32/8.3.0.1": {
         "type": "package",
         "compile": {
-          "lib/net8.0/_._": {}
+          "lib/net6.0/_._": {}
         },
         "runtime": {
-          "lib/net8.0/_._": {}
+          "lib/net6.0/_._": {}
         },
         "runtimeTargets": {
           "runtimes/win-arm64/native/libHarfBuzzSharp.dll": {
@@ -89,12 +101,12 @@
       "LiveChartsCore/2.0.0-rc5.4": {
         "type": "package",
         "compile": {
-          "lib/net8.0-windows7.0/LiveChartsCore.dll": {
+          "lib/net6.0-windows7.0/LiveChartsCore.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0-windows7.0/LiveChartsCore.dll": {
+          "lib/net6.0-windows7.0/LiveChartsCore.dll": {
             "related": ".xml"
           }
         }
@@ -107,12 +119,12 @@
           "SkiaSharp.HarfBuzz": "2.88.9"
         },
         "compile": {
-          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.dll": {
+          "lib/net6.0-windows7.0/LiveChartsCore.SkiaSharpView.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.dll": {
+          "lib/net6.0-windows7.0/LiveChartsCore.SkiaSharpView.dll": {
             "related": ".xml"
           }
         }
@@ -125,12 +137,12 @@
           "SkiaSharp.Views.WPF": "3.116.1"
         },
         "compile": {
-          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.dll": {
+          "lib/net6.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.dll": {
+          "lib/net6.0-windows7.0/LiveChartsCore.SkiaSharpView.WPF.dll": {
             "related": ".xml"
           }
         },
@@ -144,33 +156,33 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0-preview.7.25380.108"
         },
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll": {
+          "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll": {
+          "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/net8.0/_._": {}
+          "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets": {}
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.0-preview.7.25380.108": {
         "type": "package",
         "compile": {
-          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+          "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+          "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/net8.0/_._": {}
+          "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets": {}
         }
       },
       "OpenTK/3.3.1": {
@@ -209,10 +221,10 @@
           "SkiaSharp.NativeAssets.macOS": "3.116.1"
         },
         "compile": {
-          "ref/net8.0/SkiaSharp.dll": {}
+          "ref/net6.0/SkiaSharp.dll": {}
         },
         "runtime": {
-          "lib/net8.0/SkiaSharp.dll": {
+          "lib/net6.0/SkiaSharp.dll": {
             "related": ".pdb"
           }
         }
@@ -224,12 +236,12 @@
           "SkiaSharp": "3.116.1"
         },
         "compile": {
-          "lib/net8.0/SkiaSharp.HarfBuzz.dll": {
+          "lib/net6.0/SkiaSharp.HarfBuzz.dll": {
             "related": ".pdb"
           }
         },
         "runtime": {
-          "lib/net8.0/SkiaSharp.HarfBuzz.dll": {
+          "lib/net6.0/SkiaSharp.HarfBuzz.dll": {
             "related": ".pdb"
           }
         }
@@ -237,10 +249,10 @@
       "SkiaSharp.NativeAssets.macOS/3.116.1": {
         "type": "package",
         "compile": {
-          "lib/net8.0/_._": {}
+          "lib/net6.0/_._": {}
         },
         "runtime": {
-          "lib/net8.0/_._": {}
+          "lib/net6.0/_._": {}
         },
         "runtimeTargets": {
           "runtimes/osx/native/libSkiaSharp.dylib": {
@@ -252,10 +264,10 @@
       "SkiaSharp.NativeAssets.Win32/3.116.1": {
         "type": "package",
         "compile": {
-          "lib/net8.0/_._": {}
+          "lib/net6.0/_._": {}
         },
         "runtime": {
-          "lib/net8.0/_._": {}
+          "lib/net6.0/_._": {}
         },
         "runtimeTargets": {
           "runtimes/win-arm64/native/libSkiaSharp.dll": {
@@ -278,12 +290,12 @@
           "SkiaSharp": "3.116.1"
         },
         "compile": {
-          "lib/net8.0/SkiaSharp.Views.Desktop.Common.dll": {
+          "lib/net6.0/SkiaSharp.Views.Desktop.Common.dll": {
             "related": ".pdb"
           }
         },
         "runtime": {
-          "lib/net8.0/SkiaSharp.Views.Desktop.Common.dll": {
+          "lib/net6.0/SkiaSharp.Views.Desktop.Common.dll": {
             "related": ".pdb"
           }
         }
@@ -305,6 +317,31 @@
           "lib/net462/SkiaSharp.Views.WPF.dll": {
             "related": ".pdb"
           }
+        }
+      },
+      "System.ComponentModel.Annotations/5.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.1/System.ComponentModel.Annotations.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/System.ComponentModel.Annotations.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Runtime.CompilerServices.Unsafe/6.1.0": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/_._": {}
+        },
+        "runtime": {
+          "lib/net7.0/_._": {}
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
         }
       }
     }
@@ -350,6 +387,37 @@
         "lib/netstandard2.1/CommunityToolkit.Mvvm.dll",
         "lib/netstandard2.1/CommunityToolkit.Mvvm.pdb",
         "lib/netstandard2.1/CommunityToolkit.Mvvm.xml"
+      ]
+    },
+    "HandyControl.Lang.en/3.5.1": {
+      "sha512": "7Tccm+99gQDqBRzLW4jEQH070usu7KuVIU1hcwd6TIyTwsKsIPBGGUZrrvc694s+7vhpCGmxvlcUt8dU5UQs/A==",
+      "type": "package",
+      "path": "handycontrol.lang.en/3.5.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "handycontrol.lang.en.3.5.1.nupkg.sha512",
+        "handycontrol.lang.en.nuspec",
+        "icon.png",
+        "lib/net40/en/HandyControl.resources.dll",
+        "lib/net45/en/HandyControl.resources.dll",
+        "lib/net451/en/HandyControl.resources.dll",
+        "lib/net452/en/HandyControl.resources.dll",
+        "lib/net46/en/HandyControl.resources.dll",
+        "lib/net461/en/HandyControl.resources.dll",
+        "lib/net462/en/HandyControl.resources.dll",
+        "lib/net47/en/HandyControl.resources.dll",
+        "lib/net471/en/HandyControl.resources.dll",
+        "lib/net472/en/HandyControl.resources.dll",
+        "lib/net48/en/HandyControl.resources.dll",
+        "lib/net481/en/HandyControl.resources.dll",
+        "lib/net5.0/en/HandyControl.resources.dll",
+        "lib/net6.0/en/HandyControl.resources.dll",
+        "lib/net7.0/en/HandyControl.resources.dll",
+        "lib/net8.0/en/HandyControl.resources.dll",
+        "lib/netcoreapp3.0/en/HandyControl.resources.dll",
+        "lib/netcoreapp3.1/en/HandyControl.resources.dll"
       ]
     },
     "HandyControls/3.6.0": {
@@ -874,48 +942,160 @@
         "skiasharp.views.wpf.3.116.1.nupkg.sha512",
         "skiasharp.views.wpf.nuspec"
       ]
+    },
+    "System.ComponentModel.Annotations/5.0.0": {
+      "sha512": "dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg==",
+      "type": "package",
+      "path": "system.componentmodel.annotations/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net45/_._",
+        "lib/net461/System.ComponentModel.Annotations.dll",
+        "lib/netcore50/System.ComponentModel.Annotations.dll",
+        "lib/netstandard1.4/System.ComponentModel.Annotations.dll",
+        "lib/netstandard2.0/System.ComponentModel.Annotations.dll",
+        "lib/netstandard2.1/System.ComponentModel.Annotations.dll",
+        "lib/netstandard2.1/System.ComponentModel.Annotations.xml",
+        "lib/portable-net45+win8/_._",
+        "lib/win8/_._",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net45/_._",
+        "ref/net461/System.ComponentModel.Annotations.dll",
+        "ref/net461/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/System.ComponentModel.Annotations.dll",
+        "ref/netcore50/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/de/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/es/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/fr/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/it/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/ja/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/ko/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/ru/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/zh-hans/System.ComponentModel.Annotations.xml",
+        "ref/netcore50/zh-hant/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/System.ComponentModel.Annotations.dll",
+        "ref/netstandard1.1/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/de/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/es/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/fr/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/it/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/ja/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/ko/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/ru/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/zh-hans/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.1/zh-hant/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/System.ComponentModel.Annotations.dll",
+        "ref/netstandard1.3/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/de/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/es/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/fr/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/it/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/ja/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/ko/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/ru/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/zh-hans/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.3/zh-hant/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/System.ComponentModel.Annotations.dll",
+        "ref/netstandard1.4/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/de/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/es/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/fr/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/it/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/ja/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/ko/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/ru/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/zh-hans/System.ComponentModel.Annotations.xml",
+        "ref/netstandard1.4/zh-hant/System.ComponentModel.Annotations.xml",
+        "ref/netstandard2.0/System.ComponentModel.Annotations.dll",
+        "ref/netstandard2.0/System.ComponentModel.Annotations.xml",
+        "ref/netstandard2.1/System.ComponentModel.Annotations.dll",
+        "ref/netstandard2.1/System.ComponentModel.Annotations.xml",
+        "ref/portable-net45+win8/_._",
+        "ref/win8/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "system.componentmodel.annotations.5.0.0.nupkg.sha512",
+        "system.componentmodel.annotations.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "System.Runtime.CompilerServices.Unsafe/6.1.0": {
+      "sha512": "5o/HZxx6RVqYlhKSq8/zronDkALJZUT2Vz0hx43f0gwe8mwlM0y2nYlqdBwLMzr262Bwvpikeb/yEwkAa5PADg==",
+      "type": "package",
+      "path": "system.runtime.compilerservices.unsafe/6.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "buildTransitive/net461/System.Runtime.CompilerServices.Unsafe.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.targets",
+        "lib/net462/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/net462/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/net7.0/_._",
+        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "system.runtime.compilerservices.unsafe.6.1.0.nupkg.sha512",
+        "system.runtime.compilerservices.unsafe.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
-    "net9.0-windows7.0": [
+    "net7.0-windows8.0": [
       "CommunityToolkit.Mvvm >= 8.4.0",
+      "HandyControl.Lang.en >= 3.5.1",
       "HandyControls >= 3.6.0",
       "LiveChartsCore.SkiaSharpView.WPF >= 2.0.0-rc5.4",
       "Microsoft.Extensions.DependencyInjection >= 10.0.0-preview.7.25380.108"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\zhenyao2\\.nuget\\packages\\": {},
+    "C:\\Users\\rain\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Learning\\git_projects\\AIFactory\\AIFactory\\AIFactory.csproj",
+      "projectUniqueName": "D:\\git\\AIFactory\\AIFactory\\AIFactory.csproj",
       "projectName": "AIFactory",
-      "projectPath": "C:\\Learning\\git_projects\\AIFactory\\AIFactory\\AIFactory.csproj",
-      "packagesPath": "C:\\Users\\zhenyao2\\.nuget\\packages\\",
-      "outputPath": "C:\\Learning\\git_projects\\AIFactory\\AIFactory\\obj\\",
+      "projectPath": "D:\\git\\AIFactory\\AIFactory\\AIFactory.csproj",
+      "packagesPath": "C:\\Users\\rain\\.nuget\\packages\\",
+      "outputPath": "D:\\git\\AIFactory\\AIFactory\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\zhenyao2\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\rain\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net9.0-windows"
+        "net7.0-windows8.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://artifactory.it.keysight.com/artifactory/api/nuget/nuget-keysight": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net9.0-windows7.0": {
-          "targetAlias": "net9.0-windows",
+        "net7.0-windows8.0": {
+          "targetAlias": "net7.0-windows8.0",
           "projectReferences": {}
         }
       },
@@ -923,21 +1103,19 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.200"
+      }
     },
     "frameworks": {
-      "net9.0-windows7.0": {
-        "targetAlias": "net9.0-windows",
+      "net7.0-windows8.0": {
+        "targetAlias": "net7.0-windows8.0",
         "dependencies": {
           "CommunityToolkit.Mvvm": {
             "target": "Package",
             "version": "[8.4.0, )"
+          },
+          "HandyControl.Lang.en": {
+            "target": "Package",
+            "version": "[3.5.1, )"
           },
           "HandyControls": {
             "target": "Package",
@@ -971,7 +1149,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
       }
     }
   },
@@ -980,30 +1158,30 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'OpenTK 3.3.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0-windows7.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'OpenTK 3.3.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows8.0'. This package may not be fully compatible with your project.",
       "libraryId": "OpenTK",
       "targetGraphs": [
-        "net9.0-windows7.0"
+        "net7.0-windows8.0"
       ]
     },
     {
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'OpenTK.GLWpfControl 3.3.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0-windows7.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'OpenTK.GLWpfControl 3.3.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows8.0'. This package may not be fully compatible with your project.",
       "libraryId": "OpenTK.GLWpfControl",
       "targetGraphs": [
-        "net9.0-windows7.0"
+        "net7.0-windows8.0"
       ]
     },
     {
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'SkiaSharp.Views.WPF 3.116.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net9.0-windows7.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'SkiaSharp.Views.WPF 3.116.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0-windows8.0'. This package may not be fully compatible with your project.",
       "libraryId": "SkiaSharp.Views.WPF",
       "targetGraphs": [
-        "net9.0-windows7.0"
+        "net7.0-windows8.0"
       ]
     }
   ]

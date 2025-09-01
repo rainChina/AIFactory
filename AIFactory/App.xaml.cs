@@ -1,4 +1,5 @@
 ﻿using AIFactory.ViewModel;
+using HandyControl.Tools;
 using LiveChartsCore;
 using LiveChartsCore.SkiaSharpView;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,7 +34,7 @@ public partial class App : Application
               //.UseRightToLeftSettings() // Enables right to left tooltips 
 
               );
-
+        ConfigHelper.Instance.SetLang("zh-cn");
         var services = new ServiceCollection();
         services.AddSingleton<ViewModelChart>();
         services.AddSingleton<ViewModelPLCWriter>();

@@ -21,8 +21,8 @@
         </Grid.ColumnDefinitions>
 
         <lvc:CartesianChart Series="{Binding CarbonReductionSeries}" Title="{Binding TitleCarbonReductionAmount}"/>
-        <lvc:CartesianChart Grid.Column="1" Series="{Binding TPDifferenceSeries}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Title="{Binding TitleRealtimeProgress}"/>
-        <lvc:CartesianChart Grid.Row="1" Series="{Binding GassRationSeries}" Title="{Binding TitleTemperaturePressureDifference}"/>
-        <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Series="{Binding predictionSeries}" Title="{Binding TitleGasContent}"/>
+        <lvc:CartesianChart Grid.Column="1" Series="{Binding TPDifferenceSeries}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Title="{Binding TitleTemperaturePressureDifference}"/>
+        <lvc:CartesianChart Grid.Row="1" Series="{Binding GassRationSeries}" Title="{Binding TitleGasContent}"/>
+        <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Series="{Binding predictionSeries}" Title="{Binding TitleRealtimeProgress}"/>
     </Grid>
 </UserControl>
