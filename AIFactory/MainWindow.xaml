@@ -6,6 +6,28 @@
         xmlns:local="clr-namespace:AIFactory" xmlns:view="clr-namespace:AIFactory.View" xmlns:viewmodel="clr-namespace:AIFactory.ViewModel"
            mc:Ignorable="d" WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800">
+    <hc:Window.TitleTemplate>
+        <DataTemplate>
+            <DockPanel LastChildFill="True">
+                <!-- Custom Icon -->
+                <Button DockPanel.Dock="Right"
+                    Width="30"
+                    Height="30"
+                    Margin="0,0,5,0"
+                    ToolTip="Custom Icon"
+                    Click="CustomIcon_Click">
+                    <TextBlock FontFamily="Segoe MDL2 Assets"
+                           Text="&#xE700;" <!-- Example: Settings icon -->
+                           FontSize="16"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"/>
+            </Button>
+
+                <!-- Default Title -->
+                <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="10,0"/>
+            </DockPanel>
+        </DataTemplate>
+    </hc:Window.TitleTemplate>
     <Grid Name="host">
         <Grid.DataContext>
             <viewmodel:ViewModelMainWindow/>
@@ -35,7 +57,7 @@
             <view:ViewDashboard Grid.Row="1"/>
             <Border Background="{DynamicResource BorderBrush}" Grid.Row="2" Margin="10,5">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource ButtonPrimary}" Content="参数曲线" Width="100" Margin="50,15" Command="{Binding DigitalScreenShowCommand}"/>
+                    <Button Style="{StaticResource ButtonPrimary}" Content="参数曲线" Width="100" Margin="50,15" Click="Button_DigialWindow_Click"/>
                     <Button Style="{StaticResource ButtonSuccess}" Content="参数设置" FontFamily="YaHei" Width="100" Margin="50,15" Command="{Binding IncrementCounterCommand}"/>
                 </StackPanel>
             </Border>

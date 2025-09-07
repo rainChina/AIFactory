@@ -8,9 +8,9 @@ namespace AIFactory.Model
 {
     class PLCNode
     {
-        public float NodeValue { get; set; }
-        public string NodeId { get; set; }
-        public string NodeName { get; set; }
+        public DataPointType DataType;
+        public string? NodeId { get; set; }
+        public string? NodeName { get; set; }
 
     }
 }

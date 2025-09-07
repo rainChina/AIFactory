@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Sketches;
+using AIFactory.Model;
 
 namespace AIFactory.ViewModel
 {
@@ -204,12 +205,86 @@ namespace AIFactory.ViewModel
 
         public ViewModelChart()
         {
+            InitialChart();
+
             WeakReferenceMessenger.Default.Register<ClearChartDataMessage>(this, (r, m) =>
             {
                 ClearDataCollection();
             });
 
-            InitialChart();
+            WeakReferenceMessenger.Default.Register<DataPoint>(this, (r, m) =>
+            {
+                UpdateGasChart(m);
+            });
+        }
+
+        private void UdpateChart()
+        {
+            PredictionData.Add(new Random().Next(0, 10));
+            GasCoData.Add(new Random().Next(0, 10));
+            GasCo2Data.Add(new Random().Next(0, 10));
+            GasN2Data.Add(new Random().Next(0, 10));
+            GasO2Data.Add(new Random().Next(0, 10));
+            if (PredictionData.Count > 20)
+            {
+                PredictionData.RemoveAt(0);
+                GasCoData.RemoveAt(0);
+                GasCo2Data.RemoveAt(0);
+                GasN2Data.RemoveAt(0);
+                GasO2Data.RemoveAt(0);
+            }
+        }
+
+        private int DataCountLimit = 20;
+
+        private void UpdateGasChart(DataPoint pointNew)
+        {
+            switch(pointNew.DataPointType)
+            {
+                case DataPointType.Gas_CO:
+                    if (pointNew.DataValue is double d1)
+                    {
+                        GasCoData.Add(d1);
+                        if (GasCoData.Count > DataCountLimit)
+                        {
+                            GasCoData.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Gas_CO2:
+                    if (pointNew.DataValue is double d2)
+                    {
+                        GasCo2Data.Add(d2);
+                        if (GasCo2Data.Count > DataCountLimit)
+                        {
+                            GasCo2Data.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Gas_N2:
+                    if (pointNew.DataValue is double d3)
+                    {
+                        GasN2Data.Add(d3);
+                        if (GasN2Data.Count > DataCountLimit)
+                        {
+                            GasN2Data.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Gas_O2:
+                    if (pointNew.DataValue is double d4)
+                    {
+                        GasO2Data.Add(d4);
+                        if (GasO2Data.Count > DataCountLimit)
+                        {
+                            GasO2Data.RemoveAt(0);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
         }
 
     }

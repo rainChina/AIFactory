@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+﻿using AIFactory.Model;
+using CommunityToolkit.Mvvm.Messaging.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,4 +12,12 @@ namespace AIFactory.Message
     {
         public ClearChartDataMessage(string reason) : base(reason) { }
     }
+
+
+
+    public class GasMessage : ValueChangedMessage<DataPoint>
+    {
+        public GasMessage(DataPoint value) : base(value) { }
+    }
+
 }

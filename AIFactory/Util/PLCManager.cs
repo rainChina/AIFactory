@@ -1,4 +1,5 @@
-﻿using HandyControl.Data;
+﻿using AIFactory.Model;
+using HandyControl.Data;
 using Opc.Ua;
 using Opc.Ua.Client;
 using Opc.Ua.Configuration;
@@ -150,7 +151,25 @@ namespace AIFactory.Util
         }
 
 
-        public bool Write(string nodeName,object valueToWrite)
+        private DataPoint _dataPoint = new DataPoint();
+
+        public DataPoint ReadDatabyNodeID(string nodeID)
+        {
+            var readNodeId = new NodeId(nodeID); // Replace with your variable NodeId
+            DataValue readValue = _opcSession.ReadValue(readNodeId);
+
+            if (readValue.StatusCode != StatusCodes.Good)
+            {
+                return null;
+            }
+
+            _dataPoint.TimeLabel = readValue.SourceTimestamp.ToLocalTime();
+            _dataPoint.DataValue = readValue.Value;
+            return _dataPoint;
+
+        }
+
+        public bool Write(string nodeName, object valueToWrite)
         {
             // Browse to find the NodeId by name
             var browser = new Browser(_opcSession)
@@ -205,4 +224,5 @@ namespace AIFactory.Util
         }
 
     }
+
 }
