@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Sketches;
 using AIFactory.Model;
+using System.Windows.Threading;
 
 namespace AIFactory.ViewModel
 {
@@ -157,8 +158,8 @@ namespace AIFactory.ViewModel
                 new LineSeries<double> { Values = TemperatureData },
                 new LineSeries<double> { Values = PressureDiffData } };
 
-            CarbonReductionSeries = new ISeries[] 
-            { 
+            CarbonReductionSeries = new ISeries[]
+            {
                 new LineSeries<ObservablePoint>
                 {
                     Values =RealtimeProcessingDataPoint,
@@ -168,7 +169,7 @@ namespace AIFactory.ViewModel
         }
 
 
-        public ICartesianAxis[] XAxes { get; set; } = new ICartesianAxis[] 
+        public ICartesianAxis[] XAxes { get; set; } = new ICartesianAxis[]
         {
             new Axis
             {
@@ -239,7 +240,7 @@ namespace AIFactory.ViewModel
 
         private void UpdateGasChart(DataPoint pointNew)
         {
-            switch(pointNew.DataPointType)
+            switch (pointNew.DataPointType)
             {
                 case DataPointType.Gas_CO:
                     if (pointNew.DataValue is double d1)
@@ -281,11 +282,56 @@ namespace AIFactory.ViewModel
                         }
                     }
                     break;
+                case DataPointType.Diff_Pressure:
+
+                    if (pointNew.DataValue is double d5)
+                    {
+                        PressureDiffData.Add(d5);
+                        if (PressureDiffData.Count > DataCountLimit)
+                        {
+                            PressureDiffData.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Diff_Temperature:
+                    if (pointNew.DataValue is double d6)
+                    {
+                        TemperatureData.Add(d6);
+                        if (TemperatureData.Count > DataCountLimit)
+                        {
+                            TemperatureData.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.CarbonReduction:
+                    if (pointNew.DataValue is double d7)
+                    {
+                        RealtimeProcessingData.Add(d7);
+                        if (RealtimeProcessingData.Count > DataCountLimit)
+                        {
+                            RealtimeProcessingData.RemoveAt(0);
+                        }
+                    }
+                    break;
+
+                case DataPointType.RealPrediction:
+                    if (pointNew.DataValue is double d8)
+                    {
+                        PredictionData.Add(d8);
+                        if (PredictionData.Count > DataCountLimit)
+                        {
+                            PredictionData.RemoveAt(0);
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
 
         }
+
+
+      
 
     }
 }

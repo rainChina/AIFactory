@@ -5,12 +5,17 @@ using AIFactory.View;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace AIFactory.ViewModel
 {
@@ -25,41 +30,85 @@ namespace AIFactory.ViewModel
         }
 
 
+        private UserPreference userPreference;
         public ViewModelMainWindow()
         {
+
+            userPreference = App.Services.GetService<UserPreference>();
             IncrementCounterCommand = new RelayCommand(OnPLCItemWriteClick);
             DigitalScreenShowCommand = new RelayCommand(OnDigitalScreenShowClick);
 
             InitalNodeInfo();
 
-            StartPLC();
+            StartPLCTask();
+            StartPredictTask();
         }
 
-        public void StartPLC()
+        //private CancellationTokenSource _cancellationTokenSource;
+
+        //private void StartPLCTask()
+        //{
+        //    _cancellationTokenSource = new CancellationTokenSource();
+        //    var token = _cancellationTokenSource.Token;
+
+        //    Task.Run(async () =>
+        //    {
+        //        while (!token.IsCancellationRequested)
+        //        {
+        //            // Simulate reading data
+        //            string data = await ReadDataAsync();
+
+        //            // Update UI safely
+        //            Dispatcher.Invoke(() =>
+        //            {
+        //                StatusText.Text = $"Data: {data} at {DateTime.Now:T}";
+        //            });
+
+        //            await Task.Delay(2000, token); // Wait 2 seconds
+        //        }
+        //    }, token);
+        //}
+
+        public void StartPLCTask()
         {
             plcOpc = new PLCOPCManager(OPCIP);
 
-            var task = Task.Run(async () => await plcOpc.Connect());
-            task.Wait();
-
-            if (task.Result == true)
+            int _rectryInterval = userPreference.ReconnectionInterval * 1000;
+            int _dataRefreshInterval = userPreference.DataRefreshInterval * 1000;
+            var task = Task.Run(async () =>
             {
-                StartChartRefresh();
+                bool blConnected = false;
+                while (!blConnected)
+                {
+                    blConnected = await plcOpc.Connect();
+                    if (blConnected == false)
+                    {
+                        await Task.Delay(_rectryInterval); // 等待5秒后重试
+                    }
+                }
+
+                if(blConnected)
+                {
+                    DispatcherNofication("PLC连接成功", "系统信息");
+                }
+
+                while (true)
+                {
+                    if (blConnected)
+                    {
+                        break;
+                    }
+
+                    ReadPLCData();
+
+                    await Task.Delay(_dataRefreshInterval);
+
+                }
             }
-        }
-        System.Timers.Timer timerRefreshData;
-        private void StartChartRefresh()
-        {
-            timerRefreshData = new System.Timers.Timer(1000); // 设置定时器间隔为1秒
-            timerRefreshData.Elapsed += (sender, e) =>
-            {
-                ReadPLCItems();
-            };
-            timerRefreshData.AutoReset = true; // 设置为true表示定时器会重复触发
-            timerRefreshData.Enabled = true; // 启动定时器
+            );
         }
 
-        public void ReadPLCItems()
+        public void ReadPLCData()
         {
 
             foreach (var n in plcNodes)
@@ -74,20 +123,15 @@ namespace AIFactory.ViewModel
                 {
                     //n.NodeName
                     res.DataPointType = n.DataType;
-
-
-                    double[] inputData = new double[] { 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0 };
-                    string prediction = PythonCaller.CallPythonLSTM(inputData);
-                    Console.WriteLine($"Predicted value: {prediction}");
-
-
+                    if(n.DataType == DataPointType.Gas_CO)
+                    {
+                        _dataQueue.Add(res.DataValue);
+                    }
 
                     WeakReferenceMessenger.Default.Send(new GasMessage(res));
                 }
 
-
             }
-
 
         }
 
@@ -99,6 +143,9 @@ namespace AIFactory.ViewModel
             plcNodes.Add(new PLCNode() { DataType = DataPointType.Gas_O2, NodeId = "ns=2;s=Channel1.Device1.Tag3", NodeName = "Tag3" });
             plcNodes.Add(new PLCNode() { DataType = DataPointType.Gas_N2, NodeId = "ns=2;s=Channel1.Device1.Tag4", NodeName = "Tag4" });
             plcNodes.Add(new PLCNode() { DataType = DataPointType.Gas_CO, NodeId = "ns=2;s=Channel1.Device1.Tag5", NodeName = "Tag5" });
+            plcNodes.Add(new PLCNode() { DataType = DataPointType.Diff_Temperature, NodeId = "ns=2;s=Channel1.Device1.Tag5", NodeName = "Tag5" });
+            plcNodes.Add(new PLCNode() { DataType = DataPointType.Diff_Pressure, NodeId = "ns=2;s=Channel1.Device1.Tag5", NodeName = "Tag5" });
+            plcNodes.Add(new PLCNode() { DataType = DataPointType.CarbonReduction, NodeId = "ns=2;s=Channel1.Device1.Tag5", NodeName = "Tag5" });
         }
 
         public ICommand IncrementCounterCommand { get; }
@@ -124,6 +171,51 @@ namespace AIFactory.ViewModel
             plcWriter.Show();
         }
 
+        private BlockingCollection<double> _dataQueue = new();
+        List<double> inputDataList = new List<double>();
+        int LstmInputCount = 10;
+        private void StartPredictTask()
+        {
+            int _dataRefreshInterval = userPreference.PredictionInterval * 1000;
 
+            var task = Task.Run(async () =>
+            {
+                while (true)
+                {
+                    var item = _dataQueue.Take(); // Waits until an item is available
+
+                    inputDataList.Add(item);
+                    if(inputDataList.Count < LstmInputCount)
+                    {
+                        continue;
+                    }
+
+                    // Simulate reading data
+                    double[] inputData = inputDataList.ToArray();
+                    string prediction = PythonCaller.CallPythonLSTM(inputData);
+                    Console.WriteLine($"Predicted value: {prediction}");
+
+                    DataPoint res = new DataPoint();
+                    res.DataValue = double.Parse(prediction);
+                    res.DataPointType = DataPointType.RealPrediction;
+                    GasMessage gasMessage = new GasMessage(res);
+
+                    WeakReferenceMessenger.Default.Send(new GasMessage(res));
+
+                    await Task.Delay(_dataRefreshInterval); // Wait 5 seconds
+                }
+            }
+            );
+        }
+
+        private void DispatcherNofication(string message, string v)
+        {
+            Dispatcher.CurrentDispatcher.Invoke(() =>
+
+            {
+                HandyControl.Controls.Growl.Info(message);
+            });
+
+        }
     }
 }

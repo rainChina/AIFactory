@@ -11,7 +11,11 @@ namespace AIFactory.Model
         Gas_CO,
         Gas_CO2,
         Gas_N2,
-        Gas_O2
+        Gas_O2,
+        Diff_Temperature,
+        Diff_Pressure,
+        CarbonReduction,
+        RealPrediction
     }
 
     public class DataPoint
@@ -20,7 +24,7 @@ namespace AIFactory.Model
 
         public DateTime TimeLabel;
 
-        public object DataValue;
+        public double DataValue;
 
     }
 }

@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace AIFactory.Util
 {
@@ -164,10 +165,21 @@ namespace AIFactory.Util
             }
 
             _dataPoint.TimeLabel = readValue.SourceTimestamp.ToLocalTime();
-            _dataPoint.DataValue = readValue.Value;
+            _dataPoint.DataValue = (double)readValue.Value;
             return _dataPoint;
 
         }
+
+        private void DispatcherNofication(string message)
+        {
+            Dispatcher.CurrentDispatcher.Invoke(() =>
+
+            {
+                HandyControl.Controls.Growl.Info(message);
+            });
+
+        }
+
 
         public bool Write(string nodeName, object valueToWrite)
         {

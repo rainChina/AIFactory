@@ -4,30 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AIFactory" xmlns:view="clr-namespace:AIFactory.View" xmlns:viewmodel="clr-namespace:AIFactory.ViewModel"
-           mc:Ignorable="d" WindowState="Maximized"
+        mc:Ignorable="d" WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800">
-    <hc:Window.TitleTemplate>
-        <DataTemplate>
-            <DockPanel LastChildFill="True">
-                <!-- Custom Icon -->
-                <Button DockPanel.Dock="Right"
-                    Width="30"
-                    Height="30"
-                    Margin="0,0,5,0"
-                    ToolTip="Custom Icon"
-                    Click="CustomIcon_Click">
-                    <TextBlock FontFamily="Segoe MDL2 Assets"
-                           Text="&#xE700;" <!-- Example: Settings icon -->
-                           FontSize="16"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Center"/>
-            </Button>
-
-                <!-- Default Title -->
-                <TextBlock Text="{Binding}" VerticalAlignment="Center" Margin="10,0"/>
-            </DockPanel>
-        </DataTemplate>
-    </hc:Window.TitleTemplate>
     <Grid Name="host">
         <Grid.DataContext>
             <viewmodel:ViewModelMainWindow/>
