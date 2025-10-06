@@ -1,20 +1,25 @@
 ﻿using AIFactory.Model;
 using HandyControl.Data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Newtonsoft.Json.Linq;
 using Opc.Ua;
 using Opc.Ua.Client;
 using Opc.Ua.Configuration;
 using OpenTK.Audio.OpenAL;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
+using System.Xml.Serialization;
 
 namespace AIFactory.Util
 {
-    class PLCOPCManager
+    public class PLCOPCManager
     {
         private string _opcIPAddress;
         private int _opcPort;
@@ -234,6 +239,250 @@ namespace AIFactory.Util
             _opcSession.Close();
             _opcSession.Dispose();
         }
+
+        public List<NodeAttribute> LoadPLCNodeConfig(string filePath)
+        {
+            List<NodeAttribute> nodeAvailable;
+            XmlSerializer serializer = new XmlSerializer(typeof(List<NodeAttribute>));
+            using (TextReader reader = new StreamReader(filePath))
+            {
+                var res = serializer.Deserialize(reader) as List<NodeAttribute>;
+
+                if (res != null)
+                {
+                    nodeAvailable = res;
+                }
+                else
+                {
+                    nodeAvailable = new List<NodeAttribute>();
+                }
+                return nodeAvailable;
+            }
+
+        }
+
+        private List<NodeAttribute> _nodesAttribute;
+
+        public List<NodeAttribute> NodesAttribute
+        {
+            get { return _nodesAttribute; }
+            set { _nodesAttribute = value; }
+        }
+
+
+        public SensorData ReadData()
+        {
+            //using var db = new SensorContext();
+            //db.Database.EnsureCreated();
+
+            var data = new SensorData
+            {
+                Timestamp = DateTime.UtcNow,
+                Temperature = new Random().NextDouble() * 100,
+                Status = "OK"
+            };
+
+            foreach (var node in _nodesAttribute)
+            {
+                var dp = ReadDatabyNodeID(nodeID: node?.NodeId);
+                if (dp != null)
+                {
+                    //switch (node.DataType.ToLower())
+                    //{
+                    //    case "double":
+                    //        data.Temperature = dp.DataValue;
+                    //        break;
+                    //    case "string":
+                    //        data.Status = dp.DataValue.ToString();
+                    //        break;
+                    //    default:
+                    //        break;
+                    //}
+
+                    var prop = typeof(SensorData).GetProperty(node.NodeName);
+                    if (prop != null)
+                        prop.SetValue(data, Convert.ChangeType(dp.DataValue, prop.PropertyType));
+
+
+                }
+            }
+
+
+
+            //db.SensorRecords.Add(data);
+            //db.SaveChanges();
+
+            return data;
+        }
+
+        public SensorData ReadSensorData()
+        {
+
+            if (NodesAttribute == null)
+            {
+                NodesAttribute = LoadPLCNodeConfig("Config/PLCNodeConfig.xml");
+            }
+
+            var data = new SensorData
+            {
+                Timestamp = DateTime.UtcNow,
+                Temperature = new Random().NextDouble() * 100,
+                Status = "OK"
+            };
+
+            foreach (var node in _nodesAttribute)
+            {
+                var dp = ReadDatabyNodeID(nodeID: node?.NodeId);
+                if (dp != null)
+                {
+                    //switch (node.DataType.ToLower())
+                    //{
+                    //    case "double":
+                    //        data.Temperature = dp.DataValue;
+                    //        break;
+                    //    case "string":
+                    //        data.Status = dp.DataValue.ToString();
+                    //        break;
+                    //    default:
+                    //        break;
+                    //}
+
+                    var prop = typeof(SensorData).GetProperty(node.NodeName);
+                    if (prop != null)
+                        prop.SetValue(data, Convert.ChangeType(dp.DataValue, prop.PropertyType));
+
+
+                }
+            }
+
+            return data;
+        }
+
+        public Dictionary<string, NodeAttribute> LoopNodeInfo()
+        {
+            Dictionary<string, NodeAttribute> dicNode = new Dictionary<string, NodeAttribute>();
+            if (NodesAttribute == null)
+            {
+                NodesAttribute = LoadPLCNodeConfig("Config/PLCNodeConfig.xml");
+            }
+            foreach (var node in _nodesAttribute)
+            {
+                var dp = ReadDatabyNodeID(nodeID: node?.NodeId);
+                if (dp != null)
+                {
+                    dicNode.Add(node.NodeName, node);
+                }
+            }
+            return dicNode;
+
+        }
+
+
+        static Dictionary<string, NodeAttribute> RecursiveNodeDictionary(Session session, NodeId rootNodeId, Dictionary<string,NodeAttribute> nodeInfoDic)
+        {
+            var nodeDict = new Dictionary<string, NodeAttribute>();
+            ReferenceDescriptionCollection references;
+            byte[] continuationPoint;
+
+            session.Browse(
+                null,
+                null,
+                rootNodeId,
+                0,
+                BrowseDirection.Forward,
+                ReferenceTypeIds.HierarchicalReferences,
+                true,
+                (uint)NodeClass.Object | (uint)NodeClass.Variable,
+                out continuationPoint,
+                out references
+            );
+
+            foreach (var rd in references)
+            {
+                NodeId childNodeId = ExpandedNodeId.ToNodeId(rd.NodeId, session.NamespaceUris);
+
+                // Read the Description attribute
+                var readValueId = new ReadValueId
+                {
+                    NodeId = childNodeId,
+                    AttributeId = Attributes.Description
+                };
+
+                DataValueCollection dataValues;
+                var results = session.Read(null, 0, TimestampsToReturn.Neither, new ReadValueIdCollection { readValueId }, out dataValues, out _);
+
+                if (dataValues != null &&  dataValues.Count > 0)
+                {
+                    string nDescription = dataValues[0].Value?.ToString() ?? "";
+                    NodeAttribute ndInfo = new NodeAttribute()
+                    {
+                        NodeId = rootNodeId.ToString(),
+                        NodeName = rd.DisplayName.Text,
+                        NodeDeisplayName = rd.DisplayName.Text,
+                        NodeDescription = dataValues[0].Value?.ToString() ?? "N/A",
+                        NodeDataType = rd.TypeDefinition?.ToString() ?? "N/A"
+                    };
+                    if(string.IsNullOrEmpty(nDescription) == false && !nodeInfoDic.ContainsKey(nDescription))
+                    {
+                        nodeDict.Add(nDescription, ndInfo);
+                    }
+                }
+                else
+                {
+                    RecursiveNodeDictionary(session, childNodeId, nodeInfoDic);
+                }
+
+                //var description = dataValues[0].Value?.ToString() ?? "N/A";
+
+                //Console.WriteLine($"{new string(' ', indent * 2)}Name: {rd.DisplayName.Text}, Description: {description}");
+
+                //// Recurse into child nodes
+                //BrowseRecursive(session, childNodeId, indent + 1);
+            }
+            return nodeDict;
+        }
+
+
+        static void BrowseRecursive(Session session, NodeId nodeId, int indent)
+        {
+            ReferenceDescriptionCollection references;
+            byte[] continuationPoint;
+
+            session.Browse(
+                null,
+                null,
+                nodeId,
+                0,
+                BrowseDirection.Forward,
+                ReferenceTypeIds.HierarchicalReferences,
+                true,
+                (uint)NodeClass.Object | (uint)NodeClass.Variable,
+                out continuationPoint,
+                out references
+            );
+
+            foreach (var rd in references)
+            {
+                NodeId childNodeId = ExpandedNodeId.ToNodeId(rd.NodeId, session.NamespaceUris);
+
+                // Read the Description attribute
+                var readValueId = new ReadValueId
+                {
+                    NodeId = childNodeId,
+                    AttributeId = Attributes.Description
+                };
+
+                DataValueCollection dataValues;
+                var results = session.Read(null, 0, TimestampsToReturn.Neither, new ReadValueIdCollection { readValueId }, out dataValues, out _);
+                var description = dataValues[0].Value?.ToString() ?? "N/A";
+
+                Console.WriteLine($"{new string(' ', indent * 2)}Name: {rd.DisplayName.Text}, Description: {description}");
+
+                // Recurse into child nodes
+                BrowseRecursive(session, childNodeId, indent + 1);
+            }
+        }
+
 
     }
 

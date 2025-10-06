@@ -39,7 +39,7 @@ public partial class App : Application
         var services = new ServiceCollection();
         services.AddSingleton<ViewModelChart>();
         services.AddSingleton<ViewModelPLCWriter>();
-        services.AddSingleton<ViewModelMainWindow>(); 
+        //services.AddSingleton<ViewModelMainWindow>(); 
         services.AddSingleton<UserPreference>();
         Services = services.BuildServiceProvider();
 

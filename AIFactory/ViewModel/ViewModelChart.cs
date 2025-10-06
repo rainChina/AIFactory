@@ -19,6 +19,7 @@ using LiveChartsCore.Defaults;
 using LiveChartsCore.Kernel.Sketches;
 using AIFactory.Model;
 using System.Windows.Threading;
+using System.Collections.Concurrent;
 
 namespace AIFactory.ViewModel
 {
@@ -330,8 +331,8 @@ namespace AIFactory.ViewModel
 
         }
 
+        private BlockingCollection<string> dataQueue = new BlockingCollection<string>();
 
-      
 
     }
 }

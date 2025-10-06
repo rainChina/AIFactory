@@ -14,6 +14,9 @@
     <Compile Update="View\WinDigitalScreen.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="View\WinOrigianalMain.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="View\WinPLCWriter.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

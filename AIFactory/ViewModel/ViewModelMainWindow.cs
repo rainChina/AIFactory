@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -125,7 +126,7 @@ namespace AIFactory.ViewModel
                     res.DataPointType = n.DataType;
                     if(n.DataType == DataPointType.Gas_CO)
                     {
-                        _dataQueue.Add(res.DataValue);
+                        //_dataQueue.Add(res.DataValue);
                     }
 
                     WeakReferenceMessenger.Default.Send(new GasMessage(res));
@@ -171,7 +172,79 @@ namespace AIFactory.ViewModel
             plcWriter.Show();
         }
 
-        private BlockingCollection<double> _dataQueue = new();
+        private BlockingCollection<SensorData> _dataQueue = new();
+        private CancellationTokenSource cts = new CancellationTokenSource();
+        private void SaveDataToSQLite(CancellationToken token)
+        {
+            using (var db = new SensorContext())
+            {
+                db.Database.EnsureCreated();
+
+                while (!token.IsCancellationRequested)
+                {
+                    var data = _dataQueue.Take(); // Blocks until data is available
+                    //var measurement = new Measurement
+                    //{
+                    //    Value = data,
+                    //    Timestamp = DateTime.Now
+                    //};
+                    db.SensorRecords.Add(data);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+
+        int _rectryInterval = UserPreference.Instance.ReconnectionInterval * 1000;
+        int _dataRefreshInterval = UserPreference.Instance.DataRefreshInterval * 1000;
+        private async Task GetDataFromInstrumentAsync(CancellationToken token)
+        {
+
+            plcOpc = new PLCOPCManager(OPCIP);
+            while (!token.IsCancellationRequested)
+            {
+                bool blConnected = false;
+                while (!token.IsCancellationRequested && !blConnected)
+                {
+                    blConnected = await plcOpc.Connect();
+                    if (blConnected == false)
+                    {
+                        await Task.Delay(_rectryInterval); // 等待5秒后重试
+                    }
+                }
+
+                if (blConnected)
+                {
+                    DispatcherNofication("PLC连接成功", "系统信息");
+                }
+
+                while (true)
+                {
+                    if (blConnected)
+                    {
+                        break;
+                    }
+
+                   var data = plcOpc.ReadSensorData();
+
+                    _dataQueue.Add(data);
+
+                    await Task.Delay(_dataRefreshInterval);
+
+                }
+            }
+        }
+
+        private void StartTasks()
+        {
+            // Task 1: Get data from SCPI instrument
+            Task.Run(() => GetDataFromInstrumentAsync(cts.Token));
+
+            // Task 2: Save data to SQLite using EF Core
+            Task.Run(() => SaveDataToSQLite(cts.Token));
+        }
+
+
         List<double> inputDataList = new List<double>();
         int LstmInputCount = 10;
         private void StartPredictTask()
@@ -184,7 +257,7 @@ namespace AIFactory.ViewModel
                 {
                     var item = _dataQueue.Take(); // Waits until an item is available
 
-                    inputDataList.Add(item);
+                    //inputDataList.Add(item);
                     if(inputDataList.Count < LstmInputCount)
                     {
                         continue;

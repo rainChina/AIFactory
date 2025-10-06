@@ -9,8 +9,9 @@ namespace AIFactory.Util
 {
     public class UserPreference : ObservableObject
     {
+		public static UserPreference Instance { get; } = new UserPreference();
 
-		private int _reconnectionInterval =  5; //seconds
+        private int _reconnectionInterval =  5; //seconds
 
         public int ReconnectionInterval
         {

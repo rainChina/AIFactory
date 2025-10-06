@@ -25,6 +25,8 @@ namespace AIFactory.ViewModel
             Items.Add(new ViewModelPLCWriterItem { Name = "进口O2浓度量程设定", Id = "B002", Value = 20 });
             Items.Add(new ViewModelPLCWriterItem { Name = "进口O2透过率量程设定", Id = "B002", Value = 20 });
         }
+
+      
     }
 
 

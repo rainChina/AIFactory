@@ -1,0 +1,47 @@
+﻿<Window x:Class="AIFactory.View.WinOrigianalMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AIFactory.View" xmlns:viewmodel="clr-namespace:AIFactory.ViewModel"
+        mc:Ignorable="d" xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:view="clr-namespace:AIFactory.View" 
+        Title="WinOrigianalMain" Height="450" Width="800">
+    <Grid Name="host">
+        <Grid.DataContext>
+            <viewmodel:ViewModelMainWindow/>
+        </Grid.DataContext>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border Background="#0F0A07" Margin="1">
+                <Image Source="/Steel.png" ></Image>
+            </Border>
+            <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Rectangle Margin="-10" Grid.RowSpan="2" Fill="Green"/>
+                <TextBlock Text="1000℃" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <hc:SimpleText Foreground="White" Text="炉口温度" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12"/>
+            </Grid>
+            <view:ViewDashboard Grid.Row="1"/>
+            <Border Background="{DynamicResource BorderBrush}" Grid.Row="2" Margin="10,5">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource ButtonPrimary}" Content="参数曲线" Width="100" Margin="50,15" />
+                    <Button Style="{StaticResource ButtonSuccess}" Content="参数设置" FontFamily="YaHei" Width="100" Margin="50,15" Command="{Binding IncrementCounterCommand}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1">
+            <view:ViewPageChart/>
+        </Grid>
+    </Grid>
+</Window>

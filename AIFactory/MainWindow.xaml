@@ -6,42 +6,15 @@
         xmlns:local="clr-namespace:AIFactory" xmlns:view="clr-namespace:AIFactory.View" xmlns:viewmodel="clr-namespace:AIFactory.ViewModel"
         mc:Ignorable="d" WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800">
-    <Grid Name="host">
-        <Grid.DataContext>
-            <viewmodel:ViewModelMainWindow/>
-        </Grid.DataContext>
+    <hc:Window.DataContext>
+        <viewmodel:ViewModelChart></viewmodel:ViewModelChart>
+    </hc:Window.DataContext>
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-                <RowDefinition Height="Auto"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Border Background="#0F0A07" Margin="1">
-                <Image Source="/Steel.png" ></Image>
-            </Border>
-            <Grid HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30">
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Rectangle Margin="-10" Grid.RowSpan="2" Fill="Green"/>
-                <TextBlock Text="1000℃" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                <hc:SimpleText Foreground="White" Text="炉口温度" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="12"/>
-            </Grid>
-            <view:ViewDashboard Grid.Row="1"/>
-            <Border Background="{DynamicResource BorderBrush}" Grid.Row="2" Margin="10,5">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Button Style="{StaticResource ButtonPrimary}" Content="参数曲线" Width="100" Margin="50,15" Click="Button_DigialWindow_Click"/>
-                    <Button Style="{StaticResource ButtonSuccess}" Content="参数设置" FontFamily="YaHei" Width="100" Margin="50,15" Command="{Binding IncrementCounterCommand}"/>
-                </StackPanel>
-            </Border>
-        </Grid>
-        <Grid Grid.Row="1">
-            <view:ViewPageChart/>
-        </Grid>
+        <view:ViewChart></view:ViewChart>
+        <view:ViewDashboard Grid.Row="1"/>
     </Grid>
 </hc:Window>
