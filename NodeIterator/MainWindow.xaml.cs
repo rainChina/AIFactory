@@ -1,6 +1,9 @@
 ﻿using AIFactory.Model;
 using AIFactory.Util;
+using HandyControl.Tools.Extension;
 using Microsoft.Win32;
+using Opc.Ua;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -26,9 +29,50 @@ public partial class MainWindow : Window
         InitializeComponent();
     }
 
-    HashSet<string> uniqueLines = new HashSet<string>();
-    private List<string> IterateDescription()
+    ObservableCollection<NodeAttribute> nodeAttributes = new ObservableCollection<NodeAttribute>();
+    private void Load_Click(object sender, RoutedEventArgs e)
     {
+        var nAttributes = IterateDescription();
+        nodeAttributes.Clear();
+        nodeAttributes.AddRange(nAttributes);
+    }
+
+    private void Save_Click(object sender, RoutedEventArgs e)
+    {
+        SaveFileDialog saveFileDialog = new SaveFileDialog
+        {
+            Filter = "XML files (*.xml)|*.xml",
+            Title = "Save XML File",
+            FileName = "data.xml"
+        };
+
+        if (saveFileDialog.ShowDialog() is true)
+        {
+            string filePath = saveFileDialog.FileName;
+
+            var serializer = new XmlSerializer(typeof(ObservableCollection<NodeAttribute>));
+            using (var writer = new StreamWriter(filePath))
+            {
+                serializer.Serialize(writer, nodeAttributes);
+            }
+
+
+            MessageBox.Show("File saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    private void Connect_Click(object sender, RoutedEventArgs e)
+    {
+        var nAttributes = IterateDescription();
+        nodeAttributes.Clear();
+        nodeAttributes.AddRange(nAttributes);
+    }
+    
+    HashSet<string> uniqueLines = new HashSet<string>();
+    private List<NodeAttribute> IterateDescription()
+    {
+        List<NodeAttribute> nodeAttributes = new List<NodeAttribute>();
+
         // Create OpenFileDialog
         OpenFileDialog openFileDialog = new OpenFileDialog
         {
@@ -48,38 +92,73 @@ public partial class MainWindow : Window
 
                 PLCOPCManager plcManager = new PLCOPCManager("");
 
-                var nodes = plcManager.LoopNodeInfo();
-                List<NodeAttribute> nodeAttributes = new List<NodeAttribute>();
+                var nodes = plcManager.LoopNode("");
                 foreach (var node in nodes)
                 {
-                    if (!string.IsNullOrEmpty(node.Key))
+                    if (!string.IsNullOrEmpty(node.Key) && uniqueLines.Contains(node.Key))
                     {
-                        if(uniqueLines.Contains(node.Key))
-                            nodeAttributes.add(new NodeAttribute
-                            {
-                                NodeId = node.Key,
-                                NodeName = node.Value.NodeName,
-                                NodeDeisplayName = node.Value.NodeDeisplayName,
-                                NodeDescription = node.Value.NodeDescription,
-                                NodeDataType = node.Value.NodeDataType.ToString()
-                            });
+                        nodeAttributes.Add(new NodeAttribute
+                        {
+                            NodeId = node.Key,
+                            NodeName = node.Value.NodeName,
+                            NodeDeisplayName = node.Value.NodeDeisplayName,
+                            NodeDescription = node.Value.NodeDescription,
+                            NodeDataType = node.Value.NodeDataType.ToString()
+                        });
                     }
                 }
 
-                var serializer = new XmlSerializer(typeof(List<NodeAttribute>));
-                using (var writer = new StreamWriter("people.xml"))
-                {
-                    serializer.Serialize(writer, nodeAttributes);
-                }
-
+                plcManager.Close();
 
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error reading file: {ex.Message}");
             }
+
+
         }
+        return nodeAttributes;
 
     }
 
+
+    private List<NodeAttribute> IterateAllNodes()
+    {
+        var nodeAttributes = new List<NodeAttribute>();
+        PLCOPCManager plcManager = new PLCOPCManager("");
+
+        var nodes = plcManager.LoopNode("");
+        foreach (var node in nodes)
+        {
+            if (!string.IsNullOrEmpty(node.Key))
+            {
+                nodeAttributes.Add(new NodeAttribute
+                {
+                    NodeId = node.Key,
+                    NodeName = node.Value.NodeName,
+                    NodeDeisplayName = node.Value.NodeDeisplayName,
+                    NodeDescription = node.Value.NodeDescription,
+                    NodeDataType = node.Value.NodeDataType.ToString()
+                });
+            }
+        }
+
+        plcManager.Close();
+
+        return nodeAttributes;
+    }
+
+    private void Browse_Click(object sender, RoutedEventArgs e)
+    {
+        var nAttributes = IterateAllNodes();
+        nodeAttributes.Clear();
+        nodeAttributes.AddRange(nAttributes);
+    }
+    private void Filter_Click(object sender, RoutedEventArgs e)
+    {
+        var nAttributes = IterateAllNodes();
+        nodeAttributes.Clear();
+        nodeAttributes.AddRange(nAttributes);
+    }
 }

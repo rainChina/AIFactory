@@ -377,6 +377,17 @@ namespace AIFactory.Util
 
         }
 
+        public Dictionary<string, NodeAttribute> LoopNode(string nodeName)
+        {
+            Dictionary<string, NodeAttribute> dicNode = new Dictionary<string, NodeAttribute>();
+            if (_opcSession == null)
+                return dicNode;
+            // Start browsing from the Objects folder
+            NodeId rootNodeId = new NodeId(nodeName);
+            dicNode = RecursiveNodeDictionary(_opcSession, rootNodeId, dicNode);
+            return dicNode;
+        }
+
 
         static Dictionary<string, NodeAttribute> RecursiveNodeDictionary(Session session, NodeId rootNodeId, Dictionary<string,NodeAttribute> nodeInfoDic)
         {

@@ -7,6 +7,35 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="📁_File">
+                    <MenuItem Header="Load" Icon ="📂"  Click="Load_Click"/>
+                    <MenuItem Header="Save" Icon ="💾" Click="Save_Click"/>
+                </MenuItem>
+                <MenuItem Header="🛠️_Tool">
+                    <!--<MenuItem Header="Connect" Icon ="🔗 🌳" Click="Connect_Click"/>-->
+                    <MenuItem Header="Connect" Icon ="🌳" Click="Browse_Click"/>
+                    <MenuItem Header="Connect" Icon ="👁️" Click="Filter_Click"/>
+                    <!--<MenuItem Header="🧰 Options"/>
+                    <MenuItem Header="🔧 Settings"/>-->
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <ListView Name="lstNodes" Grid.Row="1">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding NodeId}" />
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding NodeName}" />
+                    <GridViewColumn Header="Display Name" DisplayMemberBinding="{Binding NodeDeisplayName}" />
+                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding NodeDescription}" />
+                    <GridViewColumn Header="Data Type" DisplayMemberBinding="{Binding NodeDataType}" />
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>
