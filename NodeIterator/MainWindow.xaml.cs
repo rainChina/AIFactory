@@ -5,7 +5,9 @@ using Microsoft.Win32;
 using Opc.Ua;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -27,16 +29,47 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+        lstNodes.ItemsSource = nodeAttributes;
     }
 
-    ObservableCollection<NodeAttribute> nodeAttributes = new ObservableCollection<NodeAttribute>();
+    public ObservableCollection<NodeAttribute> nodeAttributes = new ObservableCollection<NodeAttribute>();
     private void Load_Click(object sender, RoutedEventArgs e)
     {
-        var nAttributes = IterateDescription();
-        nodeAttributes.Clear();
-        nodeAttributes.AddRange(nAttributes);
-    }
+        OpenFileDialog openFileDialog = new OpenFileDialog();
+        {
+            // 设置对话框标题
+            openFileDialog.Title = "选择 XML 文件";
 
+            // 过滤文件类型（只显示 .xml 文件）
+            openFileDialog.Filter = "XML 文件 (*.xml)|*.xml|所有文件 (*.*)|*.*";
+
+            // 允许选择多个文件（可选，根据需求设置）
+            openFileDialog.Multiselect = false;
+
+            // 若用户选择了文件并点击“打开”
+            if (openFileDialog.ShowDialog() is true)
+            {
+                string filePath = openFileDialog.FileName;
+                var serializer = new XmlSerializer(typeof(List<NodeAttribute>));
+
+                using (var stream = new FileStream(filePath, FileMode.Open))
+                {
+                    // 反序列化为容器类
+                    var bookList = serializer.Deserialize(stream) as List<NodeAttribute>;
+                    if (bookList != null)
+                    {
+                        nodeAttributes.Clear();
+                        nodeAttributes.AddRange(bookList);
+                    }
+                    //nodeAttributes.AddRange(bookList);
+                }
+                //var nAttributes = IterateDescription();
+                //nodeAttributes.Clear();
+                //nodeAttributes.AddRange(nAttributes);
+            }
+
+        }
+    }
     private void Save_Click(object sender, RoutedEventArgs e)
     {
         SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -67,7 +100,7 @@ public partial class MainWindow : Window
         nodeAttributes.Clear();
         nodeAttributes.AddRange(nAttributes);
     }
-    
+
     HashSet<string> uniqueLines = new HashSet<string>();
     private List<NodeAttribute> IterateDescription()
     {
@@ -123,12 +156,12 @@ public partial class MainWindow : Window
     }
 
 
-    private List<NodeAttribute> IterateAllNodes()
+    private async Task<List<NodeAttribute>> IterateAllNodes()
     {
         var nodeAttributes = new List<NodeAttribute>();
         PLCOPCManager plcManager = new PLCOPCManager("");
-
-        var nodes = plcManager.LoopNode("");
+        await plcManager.Connect();
+        var nodes = plcManager.LoopNode("ns=4;i=2");
         foreach (var node in nodes)
         {
             if (!string.IsNullOrEmpty(node.Key))
@@ -149,16 +182,16 @@ public partial class MainWindow : Window
         return nodeAttributes;
     }
 
-    private void Browse_Click(object sender, RoutedEventArgs e)
+    private async void Browse_Click(object sender, RoutedEventArgs e)
     {
-        var nAttributes = IterateAllNodes();
+        var nAttributes = await IterateAllNodes();
         nodeAttributes.Clear();
-        nodeAttributes.AddRange(nAttributes);
+        nodeAttributes.AddRange((IEnumerable<NodeAttribute>)nAttributes);
     }
     private void Filter_Click(object sender, RoutedEventArgs e)
     {
         var nAttributes = IterateAllNodes();
         nodeAttributes.Clear();
-        nodeAttributes.AddRange(nAttributes);
+        nodeAttributes.AddRange((IEnumerable<NodeAttribute>)nAttributes);
     }
 }

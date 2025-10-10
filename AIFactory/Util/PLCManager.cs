@@ -419,23 +419,34 @@ namespace AIFactory.Util
                     AttributeId = Attributes.Description
                 };
 
-                DataValueCollection dataValues;
-                var results = session.Read(null, 0, TimestampsToReturn.Neither, new ReadValueIdCollection { readValueId }, out dataValues, out _);
+                //DataValueCollection dataValues;
+                //var results = session.Read(null, 0, TimestampsToReturn.Neither, new ReadValueIdCollection { readValueId }, out dataValues, out _);
+                
+                DataValueCollection descCollection;
 
-                if (dataValues != null &&  dataValues.Count > 0)
+                var readResponse = session.Read(
+                   null,
+                   0,
+                   TimestampsToReturn.Neither,
+                   new ReadValueIdCollection { readValueId },
+                   out descCollection,
+                   out _);
+
+                if (StatusCode.IsGood(readResponse.ServiceResult) && descCollection.Count > 0)
+                    //if (dataValues != null &&  dataValues.Count > 0)
                 {
-                    string nDescription = dataValues[0].Value?.ToString() ?? "";
+                    string nDescription = descCollection[0].Value?.ToString() ?? "";
                     NodeAttribute ndInfo = new NodeAttribute()
                     {
-                        NodeId = rootNodeId.ToString(),
+                        NodeId = rd.NodeId.ToString(),
                         NodeName = rd.DisplayName.Text,
                         NodeDeisplayName = rd.DisplayName.Text,
-                        NodeDescription = dataValues[0].Value?.ToString() ?? "N/A",
+                        NodeDescription = descCollection[0].Value?.ToString() ?? "N/A",
                         NodeDataType = rd.TypeDefinition?.ToString() ?? "N/A"
                     };
                     if(string.IsNullOrEmpty(nDescription) == false && !nodeInfoDic.ContainsKey(nDescription))
                     {
-                        nodeDict.Add(nDescription, ndInfo);
+                        nodeDict.Add(ndInfo.NodeId, ndInfo);
                     }
                 }
                 else
