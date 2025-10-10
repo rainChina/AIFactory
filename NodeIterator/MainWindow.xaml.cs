@@ -29,7 +29,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        lstNodes.ItemsSource = nodeAttributes;
+        nodeDataGrid.ItemsSource = nodeAttributes;
     }
 
     public ObservableCollection<NodeAttribute> nodeAttributes = new ObservableCollection<NodeAttribute>();
