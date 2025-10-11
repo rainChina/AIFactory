@@ -30,30 +30,28 @@
             IsReadOnly="False">
             <DataGrid.Columns>
                 <DataGridTextColumn 
-            Header="节点ID"
+                    Header="节点ID"
                     Binding="{Binding NodeId}"
                     Width="80"/>
                 <DataGridTextColumn 
-            Header="节点名称" 
-            Binding="{Binding NodeName}" 
-            Width="120"/>
-                <DataGridTextColumn 
-            Header="显示名称" 
-            Binding="{Binding NodeDeisplayName}" 
-                        Width="150"/>
-
+                    Header="节点名称" 
+                    Binding="{Binding NodeName}" 
+                    Width="120"/>
+                <DataGridTextColumn                    
+                    Header="显示名称" 
+                    Binding="{Binding NodeDeisplayName}" 
+                    Width="150"/>
                 <!-- NodeDescription 列（设置为可自动调整宽度） -->
                 <DataGridTextColumn 
-            Header="节点描述" 
-            Binding="{Binding NodeDescription}" 
-            Width="*"/>
+                    Header="节点描述" 
+                    Binding="{Binding NodeDescription}" 
+                    Width="*"/>
                 <!-- * 表示占满剩余宽度 -->
-
                 <!-- NodeDataType 列 -->
                 <DataGridTextColumn 
-            Header="数据类型" 
-            Binding="{Binding NodeDataType}" 
-            Width="100"/>
+                    Header="数据类型" 
+                    Binding="{Binding NodeDataType}" 
+                    Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
         <!--<ListView Name="lstNodes" Grid.Row="1">

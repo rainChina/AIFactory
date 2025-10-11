@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -39,10 +40,9 @@ namespace AIFactory.ViewModel
             IncrementCounterCommand = new RelayCommand(OnPLCItemWriteClick);
             DigitalScreenShowCommand = new RelayCommand(OnDigitalScreenShowClick);
 
-            InitalNodeInfo();
-
-            StartPLCTask();
-            StartPredictTask();
+            StartTasks();
+            //StartPLCTask();
+            //StartPredictTask();
         }
 
         //private CancellationTokenSource _cancellationTokenSource;
@@ -172,26 +172,42 @@ namespace AIFactory.ViewModel
             plcWriter.Show();
         }
 
-        private BlockingCollection<SensorData> _dataQueue = new();
+        SQLiteManager sqLiteManager;
+
+        private BlockingCollection<DataRealTime> _dataQueue = new();
         private CancellationTokenSource cts = new CancellationTokenSource();
         private void SaveDataToSQLite(CancellationToken token)
         {
-            using (var db = new SensorContext())
-            {
-                db.Database.EnsureCreated();
+            //using (var db = new SensorContext())
+            //{
+            //    db.Database.EnsureCreated();
 
-                while (!token.IsCancellationRequested)
-                {
-                    var data = _dataQueue.Take(); // Blocks until data is available
-                    //var measurement = new Measurement
-                    //{
-                    //    Value = data,
-                    //    Timestamp = DateTime.Now
-                    //};
-                    db.SensorRecords.Add(data);
-                    db.SaveChanges();
-                }
+            //    while (!token.IsCancellationRequested)
+            //    {
+            //        var data = _dataQueue.Take(); // Blocks until data is available
+            //        //var measurement = new Measurement
+            //        //{
+            //        //    Value = data,
+            //        //    Timestamp = DateTime.Now
+            //        //};
+            //        db.SensorRecords.Add(data);
+            //        db.SaveChanges();
+            //    }
+            //}
+
+            if(sqLiteManager == null)
+            {
+                sqLiteManager = new SQLiteManager();
             }
+
+            while (!token.IsCancellationRequested)
+            {
+                var data = _dataQueue.Take(); // Blocks until data is available
+                string json = JsonSerializer.Serialize(data);
+                sqLiteManager.SaveJson(json);
+            }
+            
+
         }
 
 
@@ -225,9 +241,12 @@ namespace AIFactory.ViewModel
                         break;
                     }
 
-                   var data = plcOpc.ReadSensorData();
+                   var data = plcOpc.GetRealTimeData();
 
-                    _dataQueue.Add(data);
+                    foreach(var p in data)
+                    {
+                        _dataQueue.Add(p);
+                    }
 
                     await Task.Delay(_dataRefreshInterval);
 
@@ -289,6 +308,28 @@ namespace AIFactory.ViewModel
                 HandyControl.Controls.Growl.Info(message);
             });
 
+        }
+
+        // Flag to detect redundant calls
+        private bool disposed = false;
+        // Protected implementation of Dispose pattern
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                // Free any managed objects here.
+                // For example: if you had a stream or database connection, dispose it here.
+                cts.Cancel();
+                plcOpc?.Close();
+                sqLiteManager?.Close();
+            }
+
+            // Free any unmanaged resources here.
+
+            disposed = true;
         }
     }
 }

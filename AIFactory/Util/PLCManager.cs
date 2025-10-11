@@ -389,7 +389,7 @@ namespace AIFactory.Util
         }
 
 
-        static Dictionary<string, NodeAttribute> RecursiveNodeDictionary(Session session, NodeId rootNodeId, Dictionary<string,NodeAttribute> nodeInfoDic)
+        static Dictionary<string, NodeAttribute> RecursiveNodeDictionary(Session session, NodeId rootNodeId, Dictionary<string, NodeAttribute> nodeInfoDic)
         {
             var nodeDict = new Dictionary<string, NodeAttribute>();
             ReferenceDescriptionCollection references;
@@ -421,7 +421,7 @@ namespace AIFactory.Util
 
                 //DataValueCollection dataValues;
                 //var results = session.Read(null, 0, TimestampsToReturn.Neither, new ReadValueIdCollection { readValueId }, out dataValues, out _);
-                
+
                 DataValueCollection descCollection;
 
                 var readResponse = session.Read(
@@ -433,7 +433,7 @@ namespace AIFactory.Util
                    out _);
 
                 if (StatusCode.IsGood(readResponse.ServiceResult) && descCollection.Count > 0)
-                    //if (dataValues != null &&  dataValues.Count > 0)
+                //if (dataValues != null &&  dataValues.Count > 0)
                 {
                     string nDescription = descCollection[0].Value?.ToString() ?? "";
                     NodeAttribute ndInfo = new NodeAttribute()
@@ -444,7 +444,7 @@ namespace AIFactory.Util
                         NodeDescription = descCollection[0].Value?.ToString() ?? "N/A",
                         NodeDataType = rd.TypeDefinition?.ToString() ?? "N/A"
                     };
-                    if(string.IsNullOrEmpty(nDescription) == false && !nodeInfoDic.ContainsKey(nDescription))
+                    if (string.IsNullOrEmpty(nDescription) == false && !nodeInfoDic.ContainsKey(nDescription))
                     {
                         nodeDict.Add(ndInfo.NodeId, ndInfo);
                     }
@@ -504,6 +504,66 @@ namespace AIFactory.Util
                 BrowseRecursive(session, childNodeId, indent + 1);
             }
         }
+
+        private List<NodeAttribute> LoadNodeConfig()
+        {
+            string filePath = "nodeSample.xml";
+            var serializer = new XmlSerializer(typeof(List<NodeAttribute>));
+
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                // 反序列化为容器类
+                var bookList = serializer.Deserialize(stream) as List<NodeAttribute>;
+
+                if (bookList != null)
+                {
+                    return bookList;
+                }
+                else
+                {
+                    return new List<NodeAttribute>();
+                }
+
+            }
+        }
+
+        private List<NodeAttribute> _nodesInfo;
+
+        public List<NodeAttribute> NodesInfo
+        {
+            get
+            {
+                if (_nodesInfo == null)
+                {
+                    _nodesInfo = LoadNodeConfig();
+                }
+                return _nodesInfo;
+            }
+        }
+
+        public List<DataRealTime> GetRealTimeData()
+        {
+            List<DataRealTime> lstData = new List<DataRealTime>();
+           
+            foreach (var node in NodesInfo)
+            {
+                var dp = ReadDatabyNodeID(nodeID: node?.NodeId);
+                if (dp != null)
+                {
+                    DataRealTime drt = new DataRealTime()
+                    {
+                        NameID = node.NodeName,
+                        Value = (float)dp.DataValue,
+                        TimeRefresh = dp.TimeLabel,
+                        TimeRead = DateTime.Now
+                    };
+                    lstData.Add(drt);
+                }
+            }
+            return lstData;
+
+        }
+
 
 
     }

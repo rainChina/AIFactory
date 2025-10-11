@@ -14,4 +14,16 @@ namespace AIFactory.Model
         public string Status { get; set; }
     }
 
+
+    public class DataRealTime
+    {
+        public string NameID { get; set; }
+
+        public float Value { get; set; }
+
+        public DateTime TimeRefresh { get; set; }
+
+        public DateTime TimeRead { get; set; }
+    }
+
 }

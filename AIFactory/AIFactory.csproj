@@ -37,4 +37,8 @@
     <Resource Include="Steel.png" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(ProjectDir)Resource\nodeSample.xml&quot; &quot;$(TargetDir)&quot; /Y /I" />
+  </Target>
+
 </Project>

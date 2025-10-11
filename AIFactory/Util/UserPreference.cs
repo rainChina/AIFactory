@@ -37,7 +37,7 @@ namespace AIFactory.Util
 			set { _predictionInterval = value; }
 		}
 
-
+	
 
 	}
 }
