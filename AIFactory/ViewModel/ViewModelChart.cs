@@ -241,93 +241,93 @@ namespace AIFactory.ViewModel
 
         private void UpdateGasChart(DataPoint pointNew)
         {
-            switch (pointNew.DataPointType)
-            {
-                case DataPointType.Gas_CO:
-                    if (pointNew.DataValue is double d1)
-                    {
-                        GasCoData.Add(d1);
-                        if (GasCoData.Count > DataCountLimit)
-                        {
-                            GasCoData.RemoveAt(0);
-                        }
-                    }
-                    break;
-                case DataPointType.Gas_CO2:
-                    if (pointNew.DataValue is double d2)
-                    {
-                        GasCo2Data.Add(d2);
-                        if (GasCo2Data.Count > DataCountLimit)
-                        {
-                            GasCo2Data.RemoveAt(0);
-                        }
-                    }
-                    break;
-                case DataPointType.Gas_N2:
-                    if (pointNew.DataValue is double d3)
-                    {
-                        GasN2Data.Add(d3);
-                        if (GasN2Data.Count > DataCountLimit)
-                        {
-                            GasN2Data.RemoveAt(0);
-                        }
-                    }
-                    break;
-                case DataPointType.Gas_O2:
-                    if (pointNew.DataValue is double d4)
-                    {
-                        GasO2Data.Add(d4);
-                        if (GasO2Data.Count > DataCountLimit)
-                        {
-                            GasO2Data.RemoveAt(0);
-                        }
-                    }
-                    break;
-                case DataPointType.Diff_Pressure:
+            //switch (pointNew.DataPointType)
+            //{
+            //    case DataPointType.Gas_CO:
+            //        if (pointNew.DataValue is double d1)
+            //        {
+            //            GasCoData.Add(d1);
+            //            if (GasCoData.Count > DataCountLimit)
+            //            {
+            //                GasCoData.RemoveAt(0);
+            //            }
+            //        }
+            //        break;
+            //    case DataPointType.Gas_CO2:
+            //        if (pointNew.DataValue is double d2)
+            //        {
+            //            GasCo2Data.Add(d2);
+            //            if (GasCo2Data.Count > DataCountLimit)
+            //            {
+            //                GasCo2Data.RemoveAt(0);
+            //            }
+            //        }
+            //        break;
+            //    case DataPointType.Gas_N2:
+            //        if (pointNew.DataValue is double d3)
+            //        {
+            //            GasN2Data.Add(d3);
+            //            if (GasN2Data.Count > DataCountLimit)
+            //            {
+            //                GasN2Data.RemoveAt(0);
+            //            }
+            //        }
+            //        break;
+            //    case DataPointType.Gas_O2:
+            //        if (pointNew.DataValue is double d4)
+            //        {
+            //            GasO2Data.Add(d4);
+            //            if (GasO2Data.Count > DataCountLimit)
+            //            {
+            //                GasO2Data.RemoveAt(0);
+            //            }
+            //        }
+            //        break;
+            //    case DataPointType.Diff_Pressure:
 
-                    if (pointNew.DataValue is double d5)
-                    {
-                        PressureDiffData.Add(d5);
-                        if (PressureDiffData.Count > DataCountLimit)
-                        {
-                            PressureDiffData.RemoveAt(0);
-                        }
-                    }
-                    break;
-                case DataPointType.Diff_Temperature:
-                    if (pointNew.DataValue is double d6)
-                    {
-                        TemperatureData.Add(d6);
-                        if (TemperatureData.Count > DataCountLimit)
-                        {
-                            TemperatureData.RemoveAt(0);
-                        }
-                    }
-                    break;
-                case DataPointType.CarbonReduction:
-                    if (pointNew.DataValue is double d7)
-                    {
-                        RealtimeProcessingData.Add(d7);
-                        if (RealtimeProcessingData.Count > DataCountLimit)
-                        {
-                            RealtimeProcessingData.RemoveAt(0);
-                        }
-                    }
-                    break;
+            //        if (pointNew.DataValue is double d5)
+            //        {
+            //            PressureDiffData.Add(d5);
+            //            if (PressureDiffData.Count > DataCountLimit)
+            //            {
+            //                PressureDiffData.RemoveAt(0);
+            //            }
+            //        }
+            //        break;
+            //    case DataPointType.Diff_Temperature:
+            //        if (pointNew.DataValue is double d6)
+            //        {
+            //            TemperatureData.Add(d6);
+            //            if (TemperatureData.Count > DataCountLimit)
+            //            {
+            //                TemperatureData.RemoveAt(0);
+            //            }
+            //        }
+            //        break;
+            //    case DataPointType.CarbonReduction:
+            //        if (pointNew.DataValue is double d7)
+            //        {
+            //            RealtimeProcessingData.Add(d7);
+            //            if (RealtimeProcessingData.Count > DataCountLimit)
+            //            {
+            //                RealtimeProcessingData.RemoveAt(0);
+            //            }
+            //        }
+            //        break;
 
-                case DataPointType.RealPrediction:
-                    if (pointNew.DataValue is double d8)
-                    {
-                        PredictionData.Add(d8);
-                        if (PredictionData.Count > DataCountLimit)
-                        {
-                            PredictionData.RemoveAt(0);
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
+            //    case DataPointType.RealPrediction:
+            //        if (pointNew.DataValue is double d8)
+            //        {
+            //            PredictionData.Add(d8);
+            //            if (PredictionData.Count > DataCountLimit)
+            //            {
+            //                PredictionData.RemoveAt(0);
+            //            }
+            //        }
+            //        break;
+            //    default:
+            //        break;
+            //}
 
         }
 

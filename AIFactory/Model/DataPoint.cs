@@ -24,7 +24,7 @@ namespace AIFactory.Model
 
         public DateTime TimeLabel;
 
-        public double DataValue;
+        public string DataValue;
 
     }
 }

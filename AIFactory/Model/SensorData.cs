@@ -19,7 +19,7 @@ namespace AIFactory.Model
     {
         public string NameID { get; set; }
 
-        public float Value { get; set; }
+        public string Value { get; set; }
 
         public DateTime TimeRefresh { get; set; }
 

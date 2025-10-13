@@ -95,11 +95,7 @@ namespace AIFactory.ViewModel
 
                 while (true)
                 {
-                    if (blConnected)
-                    {
-                        break;
-                    }
-
+                   
                     ReadPLCData();
 
                     await Task.Delay(_dataRefreshInterval);
@@ -217,7 +213,7 @@ namespace AIFactory.ViewModel
         {
 
             plcOpc = new PLCOPCManager(OPCIP);
-            while (!token.IsCancellationRequested)
+            //while (!token.IsCancellationRequested)
             {
                 bool blConnected = false;
                 while (!token.IsCancellationRequested && !blConnected)
@@ -234,13 +230,8 @@ namespace AIFactory.ViewModel
                     DispatcherNofication("PLC连接成功", "系统信息");
                 }
 
-                while (true)
+                while (!token.IsCancellationRequested)
                 {
-                    if (blConnected)
-                    {
-                        break;
-                    }
-
                    var data = plcOpc.GetRealTimeData();
 
                     foreach(var p in data)
@@ -288,7 +279,7 @@ namespace AIFactory.ViewModel
                     Console.WriteLine($"Predicted value: {prediction}");
 
                     DataPoint res = new DataPoint();
-                    res.DataValue = double.Parse(prediction);
+                    //res.DataValue = double.Parse(prediction);
                     res.DataPointType = DataPointType.RealPrediction;
                     GasMessage gasMessage = new GasMessage(res);
 

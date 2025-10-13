@@ -164,13 +164,13 @@ namespace AIFactory.Util
             var readNodeId = new NodeId(nodeID); // Replace with your variable NodeId
             DataValue readValue = _opcSession.ReadValue(readNodeId);
 
-            if (readValue.StatusCode != StatusCodes.Good)
+            if (readValue.StatusCode != StatusCodes.Good || readValue.Value == null)
             {
                 return null;
             }
 
             _dataPoint.TimeLabel = readValue.SourceTimestamp.ToLocalTime();
-            _dataPoint.DataValue = (double)readValue.Value;
+            _dataPoint.DataValue = readValue.Value.ToString();
             return _dataPoint;
 
         }
@@ -553,7 +553,7 @@ namespace AIFactory.Util
                     DataRealTime drt = new DataRealTime()
                     {
                         NameID = node.NodeName,
-                        Value = (float)dp.DataValue,
+                        Value = dp.DataValue,
                         TimeRefresh = dp.TimeLabel,
                         TimeRead = DateTime.Now
                     };

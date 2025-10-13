@@ -7,7 +7,7 @@
         mc:Ignorable="d" WindowState="Maximized"
         Title="MainWindow" Height="450" Width="800">
     <hc:Window.DataContext>
-        <viewmodel:ViewModelChart></viewmodel:ViewModelChart>
+        <viewmodel:ViewModelMainWindow></viewmodel:ViewModelMainWindow>
     </hc:Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
