@@ -37,7 +37,14 @@ namespace AIFactory.Util
 			set { _predictionInterval = value; }
 		}
 
-	
+
+		private int _mesSaveInterval;
+
+		public int MesSaveInterval
+		{
+			get { return _mesSaveInterval; }
+			set { _mesSaveInterval = value; }
+		}
 
 	}
 }

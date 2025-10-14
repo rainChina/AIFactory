@@ -41,110 +41,8 @@ namespace AIFactory.ViewModel
             DigitalScreenShowCommand = new RelayCommand(OnDigitalScreenShowClick);
 
             StartTasks();
-            //StartPLCTask();
             //StartPredictTask();
         }
-
-        //private CancellationTokenSource _cancellationTokenSource;
-
-        //private void StartPLCTask()
-        //{
-        //    _cancellationTokenSource = new CancellationTokenSource();
-        //    var token = _cancellationTokenSource.Token;
-
-        //    Task.Run(async () =>
-        //    {
-        //        while (!token.IsCancellationRequested)
-        //        {
-        //            // Simulate reading data
-        //            string data = await ReadDataAsync();
-
-        //            // Update UI safely
-        //            Dispatcher.Invoke(() =>
-        //            {
-        //                StatusText.Text = $"Data: {data} at {DateTime.Now:T}";
-        //            });
-
-        //            await Task.Delay(2000, token); // Wait 2 seconds
-        //        }
-        //    }, token);
-        //}
-
-        public void StartPLCTask()
-        {
-            plcOpc = new PLCOPCManager(OPCIP);
-
-            int _rectryInterval = userPreference.ReconnectionInterval * 1000;
-            int _dataRefreshInterval = userPreference.DataRefreshInterval * 1000;
-            var task = Task.Run(async () =>
-            {
-                bool blConnected = false;
-                while (!blConnected)
-                {
-                    blConnected = await plcOpc.Connect();
-                    if (blConnected == false)
-                    {
-                        await Task.Delay(_rectryInterval); // 等待5秒后重试
-                    }
-                }
-
-                if(blConnected)
-                {
-                    DispatcherNofication("PLC连接成功", "系统信息");
-                }
-
-                while (true)
-                {
-                   
-                    ReadPLCData();
-
-                    await Task.Delay(_dataRefreshInterval);
-
-                }
-            }
-            );
-        }
-
-        public void ReadPLCData()
-        {
-
-            foreach (var n in plcNodes)
-            {
-                if (n.NodeId == null)
-                {
-                    continue;
-                }
-
-                var res = plcOpc.ReadDatabyNodeID(n.NodeId);
-                if (res != null)
-                {
-                    //n.NodeName
-                    res.DataPointType = n.DataType;
-                    if(n.DataType == DataPointType.Gas_CO)
-                    {
-                        //_dataQueue.Add(res.DataValue);
-                    }
-
-                    WeakReferenceMessenger.Default.Send(new GasMessage(res));
-                }
-
-            }
-
-        }
-
-        List<PLCNode> plcNodes = new List<PLCNode>();
-        private void InitalNodeInfo()
-        {
-            plcNodes.Add(new PLCNode() { DataType = DataPointType.Gas_CO, NodeId = "ns=2;s=Channel1.Device1.Tag1", NodeName = "Tag1" });
-            plcNodes.Add(new PLCNode() { DataType = DataPointType.Gas_CO2, NodeId = "ns=2;s=Channel1.Device1.Tag2", NodeName = "Tag2" });
-            plcNodes.Add(new PLCNode() { DataType = DataPointType.Gas_O2, NodeId = "ns=2;s=Channel1.Device1.Tag3", NodeName = "Tag3" });
-            plcNodes.Add(new PLCNode() { DataType = DataPointType.Gas_N2, NodeId = "ns=2;s=Channel1.Device1.Tag4", NodeName = "Tag4" });
-            plcNodes.Add(new PLCNode() { DataType = DataPointType.Gas_CO, NodeId = "ns=2;s=Channel1.Device1.Tag5", NodeName = "Tag5" });
-            plcNodes.Add(new PLCNode() { DataType = DataPointType.Diff_Temperature, NodeId = "ns=2;s=Channel1.Device1.Tag5", NodeName = "Tag5" });
-            plcNodes.Add(new PLCNode() { DataType = DataPointType.Diff_Pressure, NodeId = "ns=2;s=Channel1.Device1.Tag5", NodeName = "Tag5" });
-            plcNodes.Add(new PLCNode() { DataType = DataPointType.CarbonReduction, NodeId = "ns=2;s=Channel1.Device1.Tag5", NodeName = "Tag5" });
-        }
-
         public ICommand IncrementCounterCommand { get; }
 
         PLCOPCManager plcOpc;
@@ -168,39 +66,24 @@ namespace AIFactory.ViewModel
             plcWriter.Show();
         }
 
-        SQLiteManager sqLiteManager;
+        SQLiteManager plcSqLiteManager;
+        SQLiteManager mesSqLiteManager;
 
-        private BlockingCollection<DataRealTime> _dataQueue = new();
+        private readonly BlockingCollection<DataRealTime> _dataQueuePLC = new();
         private CancellationTokenSource cts = new CancellationTokenSource();
-        private void SaveDataToSQLite(CancellationToken token)
+        private void SavePLCDataToSQLite(CancellationToken token)
         {
-            //using (var db = new SensorContext())
-            //{
-            //    db.Database.EnsureCreated();
-
-            //    while (!token.IsCancellationRequested)
-            //    {
-            //        var data = _dataQueue.Take(); // Blocks until data is available
-            //        //var measurement = new Measurement
-            //        //{
-            //        //    Value = data,
-            //        //    Timestamp = DateTime.Now
-            //        //};
-            //        db.SensorRecords.Add(data);
-            //        db.SaveChanges();
-            //    }
-            //}
-
-            if(sqLiteManager == null)
+            if(plcSqLiteManager == null)
             {
-                sqLiteManager = new SQLiteManager();
+                plcSqLiteManager = new SQLiteManager("PLCData");
             }
 
             while (!token.IsCancellationRequested)
             {
-                var data = _dataQueue.Take(); // Blocks until data is available
+                var data = _dataQueuePLC.Take(); // Blocks until data is available
                 string json = JsonSerializer.Serialize(data);
-                sqLiteManager.SaveJson(json);
+                plcSqLiteManager.SaveJson(json);
+                Task.Delay(10);
             }
             
 
@@ -209,6 +92,9 @@ namespace AIFactory.ViewModel
 
         int _rectryInterval = UserPreference.Instance.ReconnectionInterval * 1000;
         int _dataRefreshInterval = UserPreference.Instance.DataRefreshInterval * 1000;
+
+        int _mesDataSaveInterval = UserPreference.Instance.MesSaveInterval * 1000;
+
         private async Task GetDataFromInstrumentAsync(CancellationToken token)
         {
 
@@ -236,7 +122,9 @@ namespace AIFactory.ViewModel
 
                     foreach(var p in data)
                     {
-                        _dataQueue.Add(p);
+                        _dataQueuePLC.Add(p);
+
+                        DispatchChartData(p);
                     }
 
                     await Task.Delay(_dataRefreshInterval);
@@ -245,13 +133,91 @@ namespace AIFactory.ViewModel
             }
         }
 
+        private void DispatchChartData(DataRealTime dataPoint)
+        {
+            if(!_chartDatamapping.Keys.Contains(dataPoint.NameID))
+            {
+                return;
+            }
+            DataPoint res = new DataPoint();
+
+            res.DataValue = dataPoint.Value;
+            res.DataPointType = _chartDatamapping[dataPoint.NameID];
+            res.TimeLabel = dataPoint.TimeRefresh;
+
+            Dispatcher.CurrentDispatcher.Invoke(() =>
+            {
+                WeakReferenceMessenger.Default.Send(new GasMessage(res));
+            });
+        }
+
+
+
+        private string mesServer = "https://testapi.jasonwatmore.com/products/1";
+        private MESClient _mesClient;
+        private readonly BlockingCollection<string> _mesBlockCollection = new();
+        SQLiteManager mesSqlit;
+        private async Task GetMesDataAsync(CancellationToken token)
+        {
+            if(_mesClient == null)
+                _mesClient = new MESClient(mesServer);
+
+            while (!token.IsCancellationRequested)
+            {
+                var data = await _mesClient.FetchDataAsync();
+                if (data != null)
+                {
+                    _mesBlockCollection.Add(data);
+                }
+                await Task.Delay(_mesDataSaveInterval);
+            }
+        
+        }
+        private void SaveMesData(CancellationToken token)
+        {
+            if (mesSqlit == null)
+            {
+                mesSqlit = new SQLiteManager("MESData");
+            }
+
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    if (_mesBlockCollection.Count == 0)
+                    {
+                        Task.Delay(_mesDataSaveInterval).Wait();
+                        continue;
+                    }
+
+                    var data = _mesBlockCollection.Take(); // Blocks until data is available
+                    mesSqlit.SaveJson(data);
+                    Task.Delay(_mesDataSaveInterval);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error checking collection count: {ex.Message}");
+                    continue;
+                }
+                   
+            }
+        }
+
+
         private void StartTasks()
         {
-            // Task 1: Get data from SCPI instrument
-            Task.Run(() => GetDataFromInstrumentAsync(cts.Token));
+            //// Task 1: Get data from SCPI instrument
+            //Task.Run(() => GetDataFromInstrumentAsync(cts.Token));
 
-            // Task 2: Save data to SQLite using EF Core
-            Task.Run(() => SaveDataToSQLite(cts.Token));
+            //// Task 2: Save data to SQLite using EF Core
+            //Task.Run(() => SavePLCDataToSQLite(cts.Token));
+
+            // Task 3: Fetch data from MES server
+            Task.Run(() => GetMesDataAsync(cts.Token));
+
+            // Task 4: Save MES data to SQLite
+            Task.Run(() => SaveMesData(cts.Token));
+
         }
 
 
@@ -265,7 +231,7 @@ namespace AIFactory.ViewModel
             {
                 while (true)
                 {
-                    var item = _dataQueue.Take(); // Waits until an item is available
+                    var item = _dataQueuePLC.Take(); // Waits until an item is available
 
                     //inputDataList.Add(item);
                     if(inputDataList.Count < LstmInputCount)
@@ -315,12 +281,42 @@ namespace AIFactory.ViewModel
                 // For example: if you had a stream or database connection, dispose it here.
                 cts.Cancel();
                 plcOpc?.Close();
-                sqLiteManager?.Close();
+                plcSqLiteManager?.Close();
             }
 
             // Free any unmanaged resources here.
 
             disposed = true;
+        }
+
+
+
+        private Dictionary<string, DataPointType> _chartDatamapping;
+
+        public Dictionary<string, DataPointType> ChartDatamapping
+        {
+            get
+            {
+                if (_chartDatamapping == null)
+                    _chartDatamapping = InitChartDataMapping();
+                return _chartDatamapping;
+            }
+        }
+
+        public Dictionary<string, DataPointType> InitChartDataMapping()
+        {
+            Dictionary<string, DataPointType> chartDataMapping = new Dictionary<string, DataPointType>
+        {
+            { "CO_Concentration_Position1", DataPointType.Gas_CO },
+            { "CO2_Concentration_Position1", DataPointType.Gas_CO2 },
+            { "N2_Concentration_Position3", DataPointType.Gas_N2 },
+            { "O2_Concentration_Position1", DataPointType.Gas_O2 },
+            { "Diff_Temperature", DataPointType.Diff_Temperature },
+            { "Diff_Pressure", DataPointType.Diff_Pressure },
+            { "CarbonReduction", DataPointType.CarbonReduction },
+            { "RealPrediction", DataPointType.RealPrediction }
+        };
+            return chartDataMapping;
         }
     }
 }

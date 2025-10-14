@@ -13,10 +13,11 @@ namespace AIFactory.Util
         SqliteConnection connection;
         SqliteCommand insertCommand;
 
-        public SQLiteManager()
+        public SQLiteManager(string fname = "data")
         {
+            string sqliteFile = string.Format("{0}.db", fname);
             // Initialize SQLite
-            connection = new SqliteConnection("Data Source=data.db");
+            connection = new SqliteConnection($"Data Source={sqliteFile};");
             connection.Open();
 
             // Enable WAL mode
