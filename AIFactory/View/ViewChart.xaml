@@ -15,7 +15,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <TabControl TabStripPlacement="Right"  Margin="0" Style="{StaticResource TabControlCapsule}">
+        <TabControl TabStripPlacement="Right"  Margin="0" Style="{StaticResource TabControlCapsule}" SelectedIndex="3">
             <TabItem Header="实时曲线" HeaderStringFormat="{}{0}3">
                 <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Series="{Binding predictionSeries}" Title="{Binding TitleGasContent}"/>
             </TabItem>

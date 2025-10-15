@@ -20,6 +20,7 @@ using LiveChartsCore.Kernel.Sketches;
 using AIFactory.Model;
 using System.Windows.Threading;
 using System.Collections.Concurrent;
+using System.Transactions;
 
 namespace AIFactory.ViewModel
 {
@@ -214,7 +215,7 @@ namespace AIFactory.ViewModel
                 ClearDataCollection();
             });
 
-            WeakReferenceMessenger.Default.Register<DataPoint>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<GasMessage>(this, (r, m) =>
             {
                 UpdateGasChart(m);
             });
@@ -239,95 +240,92 @@ namespace AIFactory.ViewModel
 
         private int DataCountLimit = 20;
 
-        private void UpdateGasChart(DataPoint pointNew)
+        private void UpdateGasChart(GasMessage msg)
         {
-            //switch (pointNew.DataPointType)
-            //{
-            //    case DataPointType.Gas_CO:
-            //        if (pointNew.DataValue is double d1)
-            //        {
-            //            GasCoData.Add(d1);
-            //            if (GasCoData.Count > DataCountLimit)
-            //            {
-            //                GasCoData.RemoveAt(0);
-            //            }
-            //        }
-            //        break;
-            //    case DataPointType.Gas_CO2:
-            //        if (pointNew.DataValue is double d2)
-            //        {
-            //            GasCo2Data.Add(d2);
-            //            if (GasCo2Data.Count > DataCountLimit)
-            //            {
-            //                GasCo2Data.RemoveAt(0);
-            //            }
-            //        }
-            //        break;
-            //    case DataPointType.Gas_N2:
-            //        if (pointNew.DataValue is double d3)
-            //        {
-            //            GasN2Data.Add(d3);
-            //            if (GasN2Data.Count > DataCountLimit)
-            //            {
-            //                GasN2Data.RemoveAt(0);
-            //            }
-            //        }
-            //        break;
-            //    case DataPointType.Gas_O2:
-            //        if (pointNew.DataValue is double d4)
-            //        {
-            //            GasO2Data.Add(d4);
-            //            if (GasO2Data.Count > DataCountLimit)
-            //            {
-            //                GasO2Data.RemoveAt(0);
-            //            }
-            //        }
-            //        break;
-            //    case DataPointType.Diff_Pressure:
+            var pointNew = msg.Value;
+            double pY;
+            if(!double.TryParse(pointNew.DataValue,out pY))
+            {
+                return;
+            }
+            switch (pointNew.DataPointType)
+            {
+                case DataPointType.Gas_CO:
+                    {
+                        GasCoData.Add(pY);
+                        if (GasCoData.Count > DataCountLimit)
+                        {
+                            GasCoData.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Gas_CO2:
+                    {
+                        GasCo2Data.Add(pY);
+                        if (GasCo2Data.Count > DataCountLimit)
+                        {
+                            GasCo2Data.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Gas_N2:
+                    {
+                        GasN2Data.Add(pY);
+                        if (GasN2Data.Count > DataCountLimit)
+                        {
+                            GasN2Data.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Gas_O2:
+                    {
+                        GasO2Data.Add(pY);
+                        if (GasO2Data.Count > DataCountLimit)
+                        {
+                            GasO2Data.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Diff_Pressure:
+                    {
+                        PressureDiffData.Add(pY);
+                        if (PressureDiffData.Count > DataCountLimit)
+                        {
+                            PressureDiffData.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.Diff_Temperature:
+                    {
+                        TemperatureData.Add(pY);
+                        if (TemperatureData.Count > DataCountLimit)
+                        {
+                            TemperatureData.RemoveAt(0);
+                        }
+                    }
+                    break;
+                case DataPointType.CarbonReduction:
+                    {
+                        RealtimeProcessingData.Add(pY);
+                        if (RealtimeProcessingData.Count > DataCountLimit)
+                        {
+                            RealtimeProcessingData.RemoveAt(0);
+                        }
+                    }
+                    break;
 
-            //        if (pointNew.DataValue is double d5)
-            //        {
-            //            PressureDiffData.Add(d5);
-            //            if (PressureDiffData.Count > DataCountLimit)
-            //            {
-            //                PressureDiffData.RemoveAt(0);
-            //            }
-            //        }
-            //        break;
-            //    case DataPointType.Diff_Temperature:
-            //        if (pointNew.DataValue is double d6)
-            //        {
-            //            TemperatureData.Add(d6);
-            //            if (TemperatureData.Count > DataCountLimit)
-            //            {
-            //                TemperatureData.RemoveAt(0);
-            //            }
-            //        }
-            //        break;
-            //    case DataPointType.CarbonReduction:
-            //        if (pointNew.DataValue is double d7)
-            //        {
-            //            RealtimeProcessingData.Add(d7);
-            //            if (RealtimeProcessingData.Count > DataCountLimit)
-            //            {
-            //                RealtimeProcessingData.RemoveAt(0);
-            //            }
-            //        }
-            //        break;
-
-            //    case DataPointType.RealPrediction:
-            //        if (pointNew.DataValue is double d8)
-            //        {
-            //            PredictionData.Add(d8);
-            //            if (PredictionData.Count > DataCountLimit)
-            //            {
-            //                PredictionData.RemoveAt(0);
-            //            }
-            //        }
-            //        break;
-            //    default:
-            //        break;
-            //}
+                case DataPointType.RealPrediction:
+                    {
+                        PredictionData.Add(pY);
+                        if (PredictionData.Count > DataCountLimit)
+                        {
+                            PredictionData.RemoveAt(0);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
 
         }
 
