@@ -73,19 +73,25 @@ namespace AIFactory.ViewModel
         private CancellationTokenSource cts = new CancellationTokenSource();
         private void SavePLCDataToSQLite(CancellationToken token)
         {
-            if(plcSqLiteManager == null)
+            if (plcSqLiteManager == null)
             {
-                plcSqLiteManager = new SQLiteManager("PLCData");
+                plcSqLiteManager = new SQLiteManager("DataPLC");
             }
+            bool blDataSaved = false;
 
             while (!token.IsCancellationRequested)
             {
                 var data = _dataQueuePLC.Take(); // Blocks until data is available
                 string json = JsonSerializer.Serialize(data);
                 plcSqLiteManager.SaveJson(json);
-                Task.Delay(10);
+                Task.Delay(_mesDataSaveInterval);
+                if (!blDataSaved)
+                {
+                    DispatcherNofication("PLC数据保存中...", "系统信息");
+                    blDataSaved = true;
+                }
             }
-            
+
 
         }
 
@@ -97,7 +103,14 @@ namespace AIFactory.ViewModel
 
         private async Task GetDataFromInstrumentAsync(CancellationToken token)
         {
+            DispatcherNofication("PLC连接中...", "系统信息");
 
+            Dispatcher.CurrentDispatcher.Invoke(() =>
+            {
+                ClearChartDataMessage msg = new ClearChartDataMessage("Data Chart Init..");
+                WeakReferenceMessenger.Default.Send(msg);
+
+            });
             plcOpc = new PLCOPCManager(OPCIP);
             //while (!token.IsCancellationRequested)
             {
@@ -118,13 +131,15 @@ namespace AIFactory.ViewModel
 
                 while (!token.IsCancellationRequested)
                 {
-                   var data = plcOpc.GetRealTimeData();
+                    var data = plcOpc.GetRealTimeData();
 
-                    foreach(var p in data)
+                    foreach (var p in data)
                     {
                         _dataQueuePLC.Add(p);
 
                         DispatchChartData(p);
+
+
                     }
 
                     await Task.Delay(_dataRefreshInterval);
@@ -135,20 +150,19 @@ namespace AIFactory.ViewModel
 
         private void DispatchChartData(DataRealTime dataPoint)
         {
-            if(!_chartDatamapping.Keys.Contains(dataPoint.NameID))
+            //Dispatcher.CurrentDispatcher.Invoke(() =>
             {
-                return;
-            }
-            DataPoint res = new DataPoint();
+                if (!ChartDatamapping.Keys.Contains(dataPoint.NameID))
+                {
+                    return;
+                }
+                DataPoint res = new DataPoint();
 
-            res.DataValue = dataPoint.Value;
-            res.DataPointType = _chartDatamapping[dataPoint.NameID];
-            res.TimeLabel = dataPoint.TimeRefresh;
-
-            Dispatcher.CurrentDispatcher.Invoke(() =>
-            {
+                res.DataValue = dataPoint.Value;
+                res.DataPointType = ChartDatamapping[dataPoint.NameID];
+                res.TimeLabel = dataPoint.TimeRefresh;
                 WeakReferenceMessenger.Default.Send(new GasMessage(res));
-            });
+            };
         }
 
 
@@ -159,27 +173,34 @@ namespace AIFactory.ViewModel
         SQLiteManager mesSqlit;
         private async Task GetMesDataAsync(CancellationToken token)
         {
-            if(_mesClient == null)
+            if (_mesClient == null)
                 _mesClient = new MESClient(mesServer);
-
+            DispatcherNofication("MES连接中...", "系统信息");
+            bool blMSConneced = false;
             while (!token.IsCancellationRequested)
             {
                 var data = await _mesClient.FetchDataAsync();
                 if (data != null)
                 {
                     _mesBlockCollection.Add(data);
+                    if (!blMSConneced)
+                    {
+                        blMSConneced = true;
+                        DispatcherNofication("MES连接成功！", "系统信息");
+
+                    }
                 }
                 await Task.Delay(_mesDataSaveInterval);
             }
-        
+
         }
         private void SaveMesData(CancellationToken token)
         {
             if (mesSqlit == null)
             {
-                mesSqlit = new SQLiteManager("MESData");
+                mesSqlit = new SQLiteManager("DataMES");
             }
-
+            bool blMESSaved = false;
             while (!token.IsCancellationRequested)
             {
                 try
@@ -192,6 +213,13 @@ namespace AIFactory.ViewModel
 
                     var data = _mesBlockCollection.Take(); // Blocks until data is available
                     mesSqlit.SaveJson(data);
+
+                    if (!blMESSaved)
+                    {
+                        blMESSaved = true;
+                        DispatcherNofication("MES结果保存中...!", "系统信息");
+
+                    }
                     Task.Delay(_mesDataSaveInterval);
                 }
                 catch (Exception ex)
@@ -199,7 +227,7 @@ namespace AIFactory.ViewModel
                     Console.WriteLine($"Error checking collection count: {ex.Message}");
                     continue;
                 }
-                   
+
             }
         }
 
@@ -207,10 +235,10 @@ namespace AIFactory.ViewModel
         private void StartTasks()
         {
             //// Task 1: Get data from SCPI instrument
-            //Task.Run(() => GetDataFromInstrumentAsync(cts.Token));
+            Task.Run(() => GetDataFromInstrumentAsync(cts.Token));
 
             //// Task 2: Save data to SQLite using EF Core
-            //Task.Run(() => SavePLCDataToSQLite(cts.Token));
+            Task.Run(() => SavePLCDataToSQLite(cts.Token));
 
             // Task 3: Fetch data from MES server
             Task.Run(() => GetMesDataAsync(cts.Token));
@@ -234,7 +262,7 @@ namespace AIFactory.ViewModel
                     var item = _dataQueuePLC.Take(); // Waits until an item is available
 
                     //inputDataList.Add(item);
-                    if(inputDataList.Count < LstmInputCount)
+                    if (inputDataList.Count < LstmInputCount)
                     {
                         continue;
                     }

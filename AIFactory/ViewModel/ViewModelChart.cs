@@ -27,9 +27,9 @@ namespace AIFactory.ViewModel
     public class ViewModelChart : ObservableObject
     {
         #region Data
-        public ObservableCollection<double> PredictionData { get; set; } = new ObservableCollection<double>() { 4, 2, 5, 2, 4, 5, 3 };
-        public ObservableCollection<double> GasCoData { get; set; } = new ObservableCollection<double>() { 2, 1, 4, 2, 2, -5, -2 };
-        public ObservableCollection<double> GasCo2Data { get; set; } = new ObservableCollection<double>() { 3, 3, -3, -2, -4, -3, -1 };
+        public ObservableCollection<double> PredictionData { get; set; } = new ObservableCollection<double>() { 400,  500, 2, 4, 5, 3 };
+        public ObservableCollection<double> GasCoData { get; set; } = new ObservableCollection<double>() { 2000, 1,  2, 2, -5, -2 };
+        public ObservableCollection<double> GasCo2Data { get; set; } = new ObservableCollection<double>() { 1000, 3, -3, -2, -4, -3, -1 };
         public ObservableCollection<double> GasN2Data { get; set; } = new ObservableCollection<double>() { -2, 2, 1, 3, -1, 4, 3 };
         public ObservableCollection<double> GasO2Data { get; set; } = new ObservableCollection<double>() { 4, 2, 5, 2, 4, 5, 3 };
 
@@ -198,11 +198,11 @@ namespace AIFactory.ViewModel
 
         private void ClearDataCollection()
         {
-            PredictionData.Clear();
-            GasCoData.Clear();
-            GasCo2Data.Clear();
-            GasN2Data.Clear();
-            GasO2Data.Clear();
+            //PredictionData.Clear();
+            //GasCoData.Clear();
+            //GasCo2Data.Clear();
+            //GasN2Data.Clear();
+            //GasO2Data.Clear();
         }
 
 
@@ -253,7 +253,6 @@ namespace AIFactory.ViewModel
                 case DataPointType.Gas_CO:
                     {
                         GasCoData.Add(pY);
-                        if (GasCoData.Count > DataCountLimit)
                         {
                             GasCoData.RemoveAt(0);
                         }
@@ -262,7 +261,6 @@ namespace AIFactory.ViewModel
                 case DataPointType.Gas_CO2:
                     {
                         GasCo2Data.Add(pY);
-                        if (GasCo2Data.Count > DataCountLimit)
                         {
                             GasCo2Data.RemoveAt(0);
                         }
@@ -271,7 +269,6 @@ namespace AIFactory.ViewModel
                 case DataPointType.Gas_N2:
                     {
                         GasN2Data.Add(pY);
-                        if (GasN2Data.Count > DataCountLimit)
                         {
                             GasN2Data.RemoveAt(0);
                         }
@@ -280,7 +277,6 @@ namespace AIFactory.ViewModel
                 case DataPointType.Gas_O2:
                     {
                         GasO2Data.Add(pY);
-                        if (GasO2Data.Count > DataCountLimit)
                         {
                             GasO2Data.RemoveAt(0);
                         }

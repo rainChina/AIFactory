@@ -26,7 +26,7 @@
                 <lvc:CartesianChart Grid.Column="1" Series="{Binding TPDifferenceSeries}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Title="{Binding TitleRealtimeProgress}"/>
             </TabItem>
             <TabItem Header="CO+CO2+O2+N2" HeaderStringFormat="{}{0}2">
-                <lvc:CartesianChart Grid.Row="1" Series="{Binding GassRationSeries}" Title="{Binding TitleTemperaturePressureDifference}"/>
+                <lvc:CartesianChart Grid.Row="1" Series="{Binding GassRationSeries}" Title="{Binding TitleGasContent}"/>
             </TabItem>
         </TabControl>
     </Grid>
