@@ -1,4 +1,5 @@
 ﻿using AIFactory.Util;
+using AIFactory.View;
 using AIFactory.ViewModel;
 using HandyControl.Tools;
 using LiveChartsCore;
@@ -40,11 +41,35 @@ public partial class App : Application
         services.AddSingleton<ViewModelChart>();
         services.AddSingleton<ViewModelPLCWriter>();
         services.AddSingleton<ViewModelMainWindow>(); 
+        services.AddSingleton<ViewModelStartup>();
         services.AddSingleton<UserPreference>();
         Services = services.BuildServiceProvider();
 
         base.OnStartup(e);
+        var mainWindow = new MainWindow();
+
+        var setupWindow = new WinStartup();
+        bool? result = setupWindow.ShowDialog();
+
+        if (result == true)
+        {
+            try
+            {
+                mainWindow.ShowDialog();
+            }
+            catch(Exception ex)
+            {
+                HandyControl.Controls.MessageBox.Show(ex.Message, "错误");
+            }
+        }
+        else
+        {
+            Shutdown();
+        }
     }
+
+
+
 
 }
 

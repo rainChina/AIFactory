@@ -20,4 +20,8 @@ namespace AIFactory.Message
         public GasMessage(DataPoint value) : base(value) { }
     }
 
+    public class StartWindowConfirmMessage : ValueChangedMessage<bool>
+    {
+        public StartWindowConfirmMessage(bool reason) : base(reason) { }
+    }
 }

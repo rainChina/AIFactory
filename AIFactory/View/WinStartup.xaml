@@ -1,0 +1,55 @@
+﻿<hc:GlowWindow x:Class="AIFactory.View.WinStartup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AIFactory.View" Width="800" Height="500"
+        WindowStartupLocation="CenterScreen" xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:viewmodel="clr-namespace:AIFactory.ViewModel"
+        ShowInTaskbar="False" ResizeMode="NoResize">
+    <hc:GlowWindow.DataContext>
+        <viewmodel:ViewModelStartup></viewmodel:ViewModelStartup>
+    </hc:GlowWindow.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <hc:Card Margin="5,10">
+                <hc:Card.Header>
+                    <Border Background="#2196F3" Padding="10">
+                        <TextBlock Text="PLC" Foreground="White" FontWeight="ExtraBold" />
+                    </Border>
+                </hc:Card.Header>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="IP :" FontWeight="Bold" Margin="0,0,0,5" />
+                    <hc:TextBox x:Name="InstrumentAddressBox" Text="{Binding PlcIP}" Margin="0,0,0,15" />
+
+                    <TextBlock Text="Port :" FontWeight="Bold" Margin="0,0,0,5" />
+                    <hc:TextBox Text="{Binding PlcPort}" Margin="0,0,0,15" />
+
+                    <TextBlock Text="读取间隔(秒) :" FontWeight="Bold" Margin="0,0,0,5" />
+                    <hc:TextBox Text="{Binding PlcReadInterval}" Margin="0,0,0,15" />
+                </StackPanel>
+            </hc:Card>
+
+            <hc:Card Margin="5,10">
+                <hc:Card.Header>
+                    <Border Background="#2196F3" Padding="10">
+                        <TextBlock Text="MES" Foreground="White" FontWeight="ExtraBold" />
+                    </Border>
+                </hc:Card.Header>
+
+                <StackPanel Margin="5">
+                    <TextBlock Text="IP :" FontWeight="Bold" Margin="0,0,0,5" />
+                    <hc:TextBox x:Name="mesIP" Text="{Binding MesIP}" Margin="0,0,0,15" />
+
+                    <TextBlock Text="读取间隔(秒) :" FontWeight="Bold" Margin="0,0,0,5" />
+                    <hc:TextBox Text="{Binding MesReadInterval}" Margin="0,0,0,15" />
+                </StackPanel>
+            </hc:Card>
+        </StackPanel>
+        <Button Grid.Row="1" Content="Confirm" Width="100" HorizontalAlignment="Center" Margin="2" Command="{Binding ConfirmCommand}"/>
+    </Grid>
+</hc:GlowWindow>

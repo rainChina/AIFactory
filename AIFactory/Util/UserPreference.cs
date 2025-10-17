@@ -11,6 +11,31 @@ namespace AIFactory.Util
     {
 		public static UserPreference Instance { get; } = new UserPreference();
 
+		private  string _addressPlc= "192.168.0.1";
+
+		public string AddressPlc
+        {
+			get { return _addressPlc; }
+			set { _addressPlc = value; }
+		}
+
+		private int _portPlc = 4840;
+
+		public int PortPlc
+		{
+			get { return _portPlc; }
+			set { _portPlc = value; }
+		}
+
+
+		private string _addressMES = "";
+
+        public string AddressMES
+        {
+            get { return _addressMES; }
+            set { _addressMES = value; }
+        }
+
         private int _reconnectionInterval =  5; //seconds
 
         public int ReconnectionInterval
@@ -20,12 +45,12 @@ namespace AIFactory.Util
 		}
 
 
-		private int _dataRefreshInterval = 1;
+		private int _plcReadInterval = 1;
 
-		public int DataRefreshInterval
+		public int PlcReadInterval
 		{
-			get { return _dataRefreshInterval; }
-			set { _dataRefreshInterval = value; }
+			get { return _plcReadInterval; }
+			set { _plcReadInterval = value; }
 		}
 
 
@@ -38,7 +63,7 @@ namespace AIFactory.Util
 		}
 
 
-		private int _mesSaveInterval;
+		private int _mesSaveInterval = 1;
 
 		public int MesSaveInterval
 		{

@@ -27,9 +27,9 @@ namespace AIFactory.ViewModel
     public class ViewModelChart : ObservableObject
     {
         #region Data
-        public ObservableCollection<double> PredictionData { get; set; } = new ObservableCollection<double>() { 400,  500, 2, 4, 5, 3 };
-        public ObservableCollection<double> GasCoData { get; set; } = new ObservableCollection<double>() { 2000, 1,  2, 2, -5, -2 };
-        public ObservableCollection<double> GasCo2Data { get; set; } = new ObservableCollection<double>() { 1000, 3, -3, -2, -4, -3, -1 };
+        public ObservableCollection<double> PredictionData { get; set; } = new ObservableCollection<double>() { 4,  5, 2, 4, 5, 3 };
+        public ObservableCollection<double> GasCoData { get; set; } = new ObservableCollection<double>() { 2, 1,  2, 2, -5, -2 };
+        public ObservableCollection<double> GasCo2Data { get; set; } = new ObservableCollection<double>() { 1, 3, -3, -2, -4, -3, -1 };
         public ObservableCollection<double> GasN2Data { get; set; } = new ObservableCollection<double>() { -2, 2, 1, 3, -1, 4, 3 };
         public ObservableCollection<double> GasO2Data { get; set; } = new ObservableCollection<double>() { 4, 2, 5, 2, 4, 5, 3 };
 
@@ -133,7 +133,7 @@ namespace AIFactory.ViewModel
                 // for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
                 new LineSeries<double, StarGeometry>
                 {
-                    Name = "CO&#8322;",
+                    Name = "CO2",
                     Values = GasCo2Data,
                     Fill = null,
                     GeometrySize = 20
@@ -143,7 +143,7 @@ namespace AIFactory.ViewModel
                 // the VariableSVGPathGeometry can change the drawn path at runtime
                 new LineSeries<double, VariableSVGPathGeometry>
                 {
-                    Name = "N&#8322;",
+                    Name = "N2",
                     Values = GasN2Data,
                     Fill = null,
                     GeometrySvg = SVGPoints.Pin,
@@ -153,7 +153,7 @@ namespace AIFactory.ViewModel
                 // finally you can also use SkiaSharp to draw your own geometry
                 new LineSeries<double,CircleGeometry>
                 {
-                    Name = "O&#8322;",
+                    Name = "O2",
                     Values = GasO2Data,
                     Fill = null,
                     GeometrySize = 20

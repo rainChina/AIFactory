@@ -40,7 +40,7 @@ namespace AIFactory.ViewModel
             IncrementCounterCommand = new RelayCommand(OnPLCItemWriteClick);
             DigitalScreenShowCommand = new RelayCommand(OnDigitalScreenShowClick);
 
-            //StartTasks();
+            StartTasks();
             //StartPredictTask();
         }
         public ICommand IncrementCounterCommand { get; }
@@ -97,7 +97,7 @@ namespace AIFactory.ViewModel
 
 
         int _rectryInterval = UserPreference.Instance.ReconnectionInterval * 1000;
-        int _dataRefreshInterval = UserPreference.Instance.DataRefreshInterval * 1000;
+        int _dataRefreshInterval = UserPreference.Instance.PlcReadInterval * 1000;
 
         int _mesDataSaveInterval = UserPreference.Instance.MesSaveInterval * 1000;
 
