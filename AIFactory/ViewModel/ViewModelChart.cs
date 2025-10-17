@@ -122,6 +122,7 @@ namespace AIFactory.ViewModel
             GassRationSeries = new ISeries[] {
                 new LineSeries<double>
                 {
+                    Name = "CO",
                     Values = GasCoData,
                     Fill = null,
                     GeometrySize = 20
@@ -132,6 +133,7 @@ namespace AIFactory.ViewModel
                 // for example, the StarGeometry, CrossGeometry, RectangleGeometry and DiamondGeometry
                 new LineSeries<double, StarGeometry>
                 {
+                    Name = "CO&#8322;",
                     Values = GasCo2Data,
                     Fill = null,
                     GeometrySize = 20
@@ -141,6 +143,7 @@ namespace AIFactory.ViewModel
                 // the VariableSVGPathGeometry can change the drawn path at runtime
                 new LineSeries<double, VariableSVGPathGeometry>
                 {
+                    Name = "N&#8322;",
                     Values = GasN2Data,
                     Fill = null,
                     GeometrySvg = SVGPoints.Pin,
@@ -150,6 +153,7 @@ namespace AIFactory.ViewModel
                 // finally you can also use SkiaSharp to draw your own geometry
                 new LineSeries<double,CircleGeometry>
                 {
+                    Name = "O&#8322;",
                     Values = GasO2Data,
                     Fill = null,
                     GeometrySize = 20
@@ -195,6 +199,10 @@ namespace AIFactory.ViewModel
 
         #endregion
 
+        public SolidColorPaint LegendTextPaint { get; set; } = new SolidColorPaint
+        {
+            Color = SKColors.White
+        };
 
         private void ClearDataCollection()
         {

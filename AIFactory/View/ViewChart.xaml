@@ -16,18 +16,50 @@
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <TabControl TabStripPlacement="Right"  Margin="0" Style="{StaticResource TabControlCapsule}" SelectedIndex="3">
-            <TabItem Header="实时曲线" HeaderStringFormat="{}{0}3">
+            <TabControl.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="FontSize" Value="16"/>
+                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                </Style>
+            </TabControl.Resources>
+            <TabItem>
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="ଳ"/>
+                        <TextBlock Text="气体浓度" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </TabItem.Header>
+                <lvc:CartesianChart Grid.Row="1" Series="{Binding GassRationSeries}" LegendTextPaint="{Binding LegendTextPaint}" LegendPosition="Left" Title="{Binding TitleGasContent}"/>
+            </TabItem>
+            <TabItem HeaderStringFormat="{}{0}3">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#x223F;"/>
+                        <TextBlock Text="实时曲线"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <lvc:CartesianChart Grid.Row="1" Grid.Column="1" Series="{Binding predictionSeries}" Title="{Binding TitleGasContent}"/>
             </TabItem>
-            <TabItem Header="脱碳量" HeaderStringFormat="{}{0}4">
+            <TabItem HeaderStringFormat="{}{0}4">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="⯎-"/>
+                        <TextBlock Text="脱碳量"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <lvc:CartesianChart Series="{Binding CarbonReductionSeries}" Title="{Binding TitleCarbonReductionAmount}"/>
             </TabItem>
-            <TabItem Header="温度+微压差" HeaderStringFormat="{}{0}1">
+            <TabItem HeaderStringFormat="{}{0}1">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="ꗶ"/>
+                        <TextBlock Text="温度压差"/>
+                    </StackPanel>
+                </TabItem.Header>
                 <lvc:CartesianChart Grid.Column="1" Series="{Binding TPDifferenceSeries}" XAxes="{Binding XAxes}" YAxes="{Binding YAxes}" Title="{Binding TitleRealtimeProgress}"/>
             </TabItem>
-            <TabItem Header="CO+CO2+O2+N2" HeaderStringFormat="{}{0}2">
-                <lvc:CartesianChart Grid.Row="1" Series="{Binding GassRationSeries}" Title="{Binding TitleGasContent}"/>
-            </TabItem>
+            
         </TabControl>
     </Grid>
 </UserControl>

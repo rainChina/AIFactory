@@ -40,7 +40,7 @@ namespace AIFactory.ViewModel
             IncrementCounterCommand = new RelayCommand(OnPLCItemWriteClick);
             DigitalScreenShowCommand = new RelayCommand(OnDigitalScreenShowClick);
 
-            StartTasks();
+            //StartTasks();
             //StartPredictTask();
         }
         public ICommand IncrementCounterCommand { get; }
