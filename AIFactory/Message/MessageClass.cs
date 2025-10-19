@@ -24,4 +24,9 @@ namespace AIFactory.Message
     {
         public StartWindowConfirmMessage(bool reason) : base(reason) { }
     }
+
+    public class TaskStartMessage : ValueChangedMessage<bool>
+    {
+        public TaskStartMessage(bool reason) : base(reason) { }
+    }
 }

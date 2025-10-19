@@ -6,9 +6,11 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace AIFactory.ViewModel
 {
@@ -41,7 +43,7 @@ namespace AIFactory.ViewModel
 
         public ViewModelStartup()
         {
-           var userPreference = App.Services.GetService<UserPreference>();
+            var userPreference = App.Services.GetService<UserPreference>();
 
             plcIP = userPreference?.AddressPlc;
             plcPort = userPreference?.PortPlc;
@@ -53,6 +55,22 @@ namespace AIFactory.ViewModel
         [RelayCommand]
         private void Confirm()
         {
+            var userPreference = App.Services.GetService<UserPreference>();
+
+            userPreference.AddressPlc = PlcIP;
+            userPreference.PortPlc = plcPort.Value;
+            userPreference.AddressMES = mesIP;
+            userPreference.PlcReadInterval = plcReadInterval.Value;
+            userPreference.MesSaveInterval = MesReadInterval.Value;
+
+            XmlSerializer serializer = new XmlSerializer(typeof(UserPreference));
+
+            // 写入 XML 文件
+            using (StreamWriter writer = new StreamWriter(UserPreference.FileName))
+            {
+                serializer.Serialize(writer, userPreference);
+            }
+
             StartWindowConfirmMessage msg = new StartWindowConfirmMessage(true);
             WeakReferenceMessenger.Default.Send(msg);
         }

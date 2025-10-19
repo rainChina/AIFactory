@@ -22,16 +22,4 @@ public partial class MainWindow
     {
         InitializeComponent();
     }
-
-    private void Button_DigialWindow_Click(object sender, RoutedEventArgs e)
-    {
-
-        var plcWriter = new WinDigitalScreen();
-
-        plcWriter.Show();
-        plcWriter.Owner = this; // Set owner for better control
-        this.Hide(); // Hide main window
-        plcWriter.ShowDialog(); // Show secondary window modally
-    }
-
 }

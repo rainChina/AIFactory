@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Org.BouncyCastle.Asn1.BC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace AIFactory.Util
 {
     public class UserPreference : ObservableObject
     {
+		public static string FileName = "Setting.xml";
 		public static UserPreference Instance { get; } = new UserPreference();
 
 		private  string _addressPlc= "192.168.0.1";
@@ -28,7 +30,7 @@ namespace AIFactory.Util
 		}
 
 
-		private string _addressMES = "";
+		private string _addressMES = @"http://10.51.114.109:30000/api/bigdataservice/heatno";
 
         public string AddressMES
         {
@@ -71,5 +73,15 @@ namespace AIFactory.Util
 			set { _mesSaveInterval = value; }
 		}
 
+
+		public void Copy(UserPreference pref)
+		{
+			this.AddressPlc = pref.AddressPlc;
+			this.PortPlc = pref.PortPlc;
+			this.AddressMES = pref.AddressMES;
+			this.PlcReadInterval = pref.PlcReadInterval;
+			this.MesSaveInterval = pref.MesSaveInterval;
+			
+		}
 	}
 }

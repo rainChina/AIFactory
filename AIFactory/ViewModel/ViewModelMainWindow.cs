@@ -23,26 +23,17 @@ namespace AIFactory.ViewModel
 {
     public partial class ViewModelMainWindow : ObservableObject
     {
-        private string _opcIP;
 
-        public string OPCIP
-        {
-            get { return _opcIP; }
-            set { _opcIP = value; }
-        }
-
-
-        private UserPreference userPreference;
         public ViewModelMainWindow()
         {
-
-            userPreference = App.Services.GetService<UserPreference>();
             IncrementCounterCommand = new RelayCommand(OnPLCItemWriteClick);
             DigitalScreenShowCommand = new RelayCommand(OnDigitalScreenShowClick);
-
-            StartTasks();
-            //StartPredictTask();
+            WeakReferenceMessenger.Default.Register<TaskStartMessage>(this, (r, m) =>
+            {
+                StartTasks(m);
+            });
         }
+
         public ICommand IncrementCounterCommand { get; }
 
         PLCOPCManager plcOpc;
@@ -111,22 +102,13 @@ namespace AIFactory.ViewModel
                 WeakReferenceMessenger.Default.Send(msg);
 
             });
-            plcOpc = new PLCOPCManager(OPCIP);
-            //while (!token.IsCancellationRequested)
+            plcOpc = new PLCOPCManager(UserPreference.Instance.AddressPlc);
             {
-                bool blConnected = false;
-                while (!token.IsCancellationRequested && !blConnected)
+                bool blConnected = await plcOpc.Connect();
+                if (!blConnected)
                 {
-                    blConnected = await plcOpc.Connect();
-                    if (blConnected == false)
-                    {
-                        await Task.Delay(_rectryInterval); // 等待5秒后重试
-                    }
-                }
-
-                if (blConnected)
-                {
-                    DispatcherNofication("PLC连接成功", "系统信息");
+                    DispatcherNofication("PLC连接失败...", "系统信息");
+                    return;
                 }
 
                 while (!token.IsCancellationRequested)
@@ -162,20 +144,19 @@ namespace AIFactory.ViewModel
                 res.DataPointType = ChartDatamapping[dataPoint.NameID];
                 res.TimeLabel = dataPoint.TimeRefresh;
                 WeakReferenceMessenger.Default.Send(new GasMessage(res));
-            };
+            }
+            ;
         }
 
 
 
-        private string mesServer = "https://testapi.jasonwatmore.com/products/1";
         private MESClient _mesClient;
         private readonly BlockingCollection<string> _mesBlockCollection = new();
         SQLiteManager mesSqlit;
         private async Task GetMesDataAsync(CancellationToken token)
         {
             if (_mesClient == null)
-                _mesClient = new MESClient(mesServer);
-            DispatcherNofication("MES连接中...", "系统信息");
+                _mesClient = new MESClient(UserPreference.Instance.AddressMES);
             bool blMSConneced = false;
             while (!token.IsCancellationRequested)
             {
@@ -187,7 +168,6 @@ namespace AIFactory.ViewModel
                     {
                         blMSConneced = true;
                         DispatcherNofication("MES连接成功！", "系统信息");
-
                     }
                 }
                 await Task.Delay(_mesDataSaveInterval);
@@ -232,7 +212,7 @@ namespace AIFactory.ViewModel
         }
 
 
-        private void StartTasks()
+        private void StartTasks(TaskStartMessage msg)
         {
             //// Task 1: Get data from SCPI instrument
             Task.Run(() => GetDataFromInstrumentAsync(cts.Token));
@@ -251,39 +231,6 @@ namespace AIFactory.ViewModel
 
         List<double> inputDataList = new List<double>();
         int LstmInputCount = 10;
-        private void StartPredictTask()
-        {
-            int _dataRefreshInterval = userPreference.PredictionInterval * 1000;
-
-            var task = Task.Run(async () =>
-            {
-                while (true)
-                {
-                    var item = _dataQueuePLC.Take(); // Waits until an item is available
-
-                    //inputDataList.Add(item);
-                    if (inputDataList.Count < LstmInputCount)
-                    {
-                        continue;
-                    }
-
-                    // Simulate reading data
-                    double[] inputData = inputDataList.ToArray();
-                    string prediction = PythonCaller.CallPythonLSTM(inputData);
-                    Console.WriteLine($"Predicted value: {prediction}");
-
-                    DataPoint res = new DataPoint();
-                    //res.DataValue = double.Parse(prediction);
-                    res.DataPointType = DataPointType.RealPrediction;
-                    GasMessage gasMessage = new GasMessage(res);
-
-                    WeakReferenceMessenger.Default.Send(new GasMessage(res));
-
-                    await Task.Delay(_dataRefreshInterval); // Wait 5 seconds
-                }
-            }
-            );
-        }
 
         private void DispatcherNofication(string message, string v)
         {
