@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AIFactory.View" Width="800" Height="500"
+        xmlns:local="clr-namespace:AIFactory.View" Width="600" Height="400"
         WindowStartupLocation="CenterScreen" xmlns:hc="https://handyorg.github.io/handycontrol" xmlns:viewmodel="clr-namespace:AIFactory.ViewModel"
         ShowInTaskbar="False" ResizeMode="NoResize">
     <hc:GlowWindow.DataContext>
@@ -29,8 +29,8 @@
                     <TextBlock Text="Port :" FontWeight="Bold" Margin="0,0,0,5" />
                     <hc:TextBox Text="{Binding PlcPort}" Margin="0,0,0,15" />
 
-                    <TextBlock Text="读取间隔(秒) :" FontWeight="Bold" Margin="0,0,0,5" />
-                    <hc:TextBox Text="{Binding PlcReadInterval}" Margin="0,0,0,15" />
+                    <!--<TextBlock Text="读取间隔(秒) :" FontWeight="Bold" Margin="0,0,0,5" />
+                    <hc:TextBox Text="{Binding PlcReadInterval}" Margin="0,0,0,15" />-->
                 </StackPanel>
             </hc:Card>
 
@@ -45,8 +45,8 @@
                     <TextBlock Text="IP :" FontWeight="Bold" Margin="0,0,0,5" />
                     <hc:TextBox x:Name="mesIP" Text="{Binding MesIP}" Margin="0,0,0,15" />
 
-                    <TextBlock Text="读取间隔(秒) :" FontWeight="Bold" Margin="0,0,0,5" />
-                    <hc:TextBox Text="{Binding MesReadInterval}" Margin="0,0,0,15" />
+                    <!--<TextBlock Text="读取间隔(秒) :" FontWeight="Bold" Margin="0,0,0,5" />
+                    <hc:TextBox Text="{Binding MesReadInterval}" Margin="0,0,0,15" />-->
                 </StackPanel>
             </hc:Card>
         </StackPanel>

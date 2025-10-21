@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 
 namespace AIFactory.Util
 {
-    public class UserPreference : ObservableObject
-    {
+	public class UserPreference : ObservableObject
+	{
 		public static string FileName = "Setting.xml";
 		public static UserPreference Instance { get; } = new UserPreference();
 
-		private  string _addressPlc= "192.168.0.1";
+		private string _addressPlc = "192.168.0.1";
 
 		public string AddressPlc
-        {
+		{
 			get { return _addressPlc; }
 			set { _addressPlc = value; }
 		}
@@ -32,16 +32,16 @@ namespace AIFactory.Util
 
 		private string _addressMES = @"http://10.51.114.109:30000/api/bigdataservice/heatno";
 
-        public string AddressMES
-        {
-            get { return _addressMES; }
-            set { _addressMES = value; }
-        }
+		public string AddressMES
+		{
+			get { return _addressMES; }
+			set { _addressMES = value; }
+		}
 
-        private int _reconnectionInterval =  5; //seconds
+		private int _reconnectionInterval = 5; //seconds
 
-        public int ReconnectionInterval
-        {
+		public int ReconnectionInterval
+		{
 			get { return _reconnectionInterval; }
 			set { _reconnectionInterval = value; }
 		}
@@ -65,7 +65,7 @@ namespace AIFactory.Util
 		}
 
 
-		private int _mesSaveInterval = 1;
+		private int _mesSaveInterval = 60;
 
 		public int MesSaveInterval
 		{
@@ -81,7 +81,15 @@ namespace AIFactory.Util
 			this.AddressMES = pref.AddressMES;
 			this.PlcReadInterval = pref.PlcReadInterval;
 			this.MesSaveInterval = pref.MesSaveInterval;
-			
+
 		}
+	}
+
+	public enum MessageType
+	{
+		Info,
+        Success,
+        Warning,
+		Error
 	}
 }

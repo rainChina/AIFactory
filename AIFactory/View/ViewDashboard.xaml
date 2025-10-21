@@ -32,9 +32,9 @@
                 </EventTrigger>
             </Grid.Triggers>
             <StackPanel Height="60" Orientation="Horizontal" HorizontalAlignment="Center">
-                <Rectangle Name="SplashLevel0" Margin="1" Fill="Green" Width="50" Height="50"/>
-                <Rectangle Name="SplashLevel1" Margin="1" Fill="Orange" Width="50" Height="50"/>
-                <Rectangle Name="SplashLevel2" Margin="1" Fill="OrangeRed" Width="50" Height="50"/>
+                <Ellipse Name="SplashLevel0" Margin="1" Fill="Green" Width="50" Height="50" Visibility="Collapsed"/>
+                <Ellipse Name="SplashLevel1" Margin="1" Fill="Orange" Width="50" Height="50"/>
+                <Ellipse Name="SplashLevel2" Margin="1" Fill="OrangeRed" Width="50" Height="50" Visibility="Collapsed"/>
             </StackPanel>
             <hc:SimpleText Foreground="White" Text="喷溅预警级别" Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="18"/>
         </Grid>

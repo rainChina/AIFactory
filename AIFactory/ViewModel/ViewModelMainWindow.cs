@@ -78,7 +78,7 @@ namespace AIFactory.ViewModel
                 Task.Delay(_mesDataSaveInterval);
                 if (!blDataSaved)
                 {
-                    DispatcherNofication("PLC数据保存中...", "系统信息");
+                    DispatcherNofication("PLC数据保存成功!",MessageType.Success);
                     blDataSaved = true;
                 }
             }
@@ -87,14 +87,12 @@ namespace AIFactory.ViewModel
         }
 
 
-        int _rectryInterval = UserPreference.Instance.ReconnectionInterval * 1000;
-        int _dataRefreshInterval = UserPreference.Instance.PlcReadInterval * 1000;
 
         int _mesDataSaveInterval = UserPreference.Instance.MesSaveInterval * 1000;
 
         private async Task GetDataFromInstrumentAsync(CancellationToken token)
         {
-            DispatcherNofication("PLC连接中...", "系统信息");
+            DispatcherNofication("PLC连接中...",MessageType.Info);
 
             Dispatcher.CurrentDispatcher.Invoke(() =>
             {
@@ -107,7 +105,7 @@ namespace AIFactory.ViewModel
                 bool blConnected = await plcOpc.Connect();
                 if (!blConnected)
                 {
-                    DispatcherNofication("PLC连接失败...", "系统信息");
+                    DispatcherNofication("PLC连接失败...", MessageType.Error);
                     return;
                 }
 
@@ -124,7 +122,7 @@ namespace AIFactory.ViewModel
 
                     }
 
-                    await Task.Delay(_dataRefreshInterval);
+                    await Task.Delay(UserPreference.Instance.PlcReadInterval * 1000);
 
                 }
             }
@@ -163,14 +161,30 @@ namespace AIFactory.ViewModel
                 var data = await _mesClient.FetchDataAsync();
                 if (data != null)
                 {
-                    _mesBlockCollection.Add(data);
+
+                    // Deserialize to Dictionary
+                    var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(data);
+
+                    if(dict == null)
+                    {
+                        DispatcherNofication("MES结果解析失败!", MessageType.Error);
+                        continue;
+                    }
+
+                    // Add current DateTime
+                    dict["TimeRead"] = DateTime.Now.ToString(); 
+
+                    // Serialize back to JSON
+                    string updatedJson = JsonSerializer.Serialize(dict);
+
+                    _mesBlockCollection.Add(updatedJson);
                     if (!blMSConneced)
                     {
+                        DispatcherNofication("MES连接成功!", MessageType.Success);
                         blMSConneced = true;
-                        DispatcherNofication("MES连接成功！", "系统信息");
                     }
                 }
-                await Task.Delay(_mesDataSaveInterval);
+                await Task.Delay(UserPreference.Instance.MesSaveInterval*1000);
             }
 
         }
@@ -197,7 +211,7 @@ namespace AIFactory.ViewModel
                     if (!blMESSaved)
                     {
                         blMESSaved = true;
-                        DispatcherNofication("MES结果保存中...!", "系统信息");
+                        DispatcherNofication("MES结果保存中成功!", MessageType.Success);
 
                     }
                     Task.Delay(_mesDataSaveInterval);
@@ -229,15 +243,29 @@ namespace AIFactory.ViewModel
         }
 
 
-        List<double> inputDataList = new List<double>();
-        int LstmInputCount = 10;
 
-        private void DispatcherNofication(string message, string v)
+        private void DispatcherNofication(string message, MessageType msgType)
         {
             Dispatcher.CurrentDispatcher.Invoke(() =>
-
             {
-                HandyControl.Controls.Growl.Info(message);
+                switch(msgType)
+                {
+                    case MessageType.Info:
+                        HandyControl.Controls.Growl.Info(message);
+                        break;
+                    case MessageType.Success:
+                        HandyControl.Controls.Growl.Success(message);
+                        break;
+                    case MessageType.Warning:
+                        HandyControl.Controls.Growl.Warning(message);
+                        break;
+                    case MessageType.Error:
+                        HandyControl.Controls.Growl.Error(message);
+                        break;
+                    default:
+                        HandyControl.Controls.Growl.Info(message);
+                        break;
+                }
             });
 
         }
