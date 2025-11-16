@@ -43,7 +43,7 @@ namespace AIFactory.ViewModel
 
         public ViewModelStartup()
         {
-            var userPreference = App.Services.GetService<UserPreference>();
+            var userPreference = UserPreference.Instance;
 
             plcIP = userPreference?.AddressPlc;
             plcPort = userPreference?.PortPlc;
@@ -55,11 +55,11 @@ namespace AIFactory.ViewModel
         [RelayCommand]
         private void Confirm()
         {
-            var userPreference = App.Services.GetService<UserPreference>();
+            var userPreference = UserPreference.Instance;
 
             userPreference.AddressPlc = PlcIP;
             userPreference.PortPlc = plcPort.Value;
-            userPreference.AddressMES = mesIP;
+            userPreference.AddressMES = MesIP;
             userPreference.PlcReadInterval = plcReadInterval.Value;
             userPreference.MesSaveInterval = MesReadInterval.Value;
 
