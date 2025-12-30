@@ -62,7 +62,54 @@ namespace AIFactory.Util
 
         public async Task<DataRealTime> GetDataAsync()
         {
-            DataRealTime lstData = new DataRealTime();
+
+
+            //var payload = new
+            //{
+            //    Instrument = "PLTS",
+            //    Status = "Ready"
+            //};
+
+            //// Customize serialization exactly as needed:
+            //var json = JsonSerializer.Serialize(payload, new JsonSerializerOptions
+            //{
+            //    PropertyNamingPolicy = JsonNamingPolicy.CamelCase, // or null to keep PascalCase
+            //    WriteIndented = false
+            //});
+
+            //using var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            //// Optional headers to match Postman:
+            //_httpClient.DefaultRequestHeaders.Accept.Clear();
+            //_httpClient.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+
+            //var response = await _httpClient.PostAsync("https://api.example.com/status", content);
+
+
+//            using System.Net.Http.Json;
+
+//// Define options once as a static field to save CPU cycles
+//private static readonly JsonSerializerOptions JsonOptions = new()
+//{
+//    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+//    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull // Skips null fields
+//};
+
+//        public async Task PostStatusAsync()
+//        {
+//            var payload = new { Instrument = "PLTS", Status = "Ready" };
+
+//            // This handles serialization, Encoding, and Content-Type in one step
+//            var response = await client.PostAsJsonAsync("https://api.example.com/status", payload, JsonOptions);
+
+//            if (response.IsSuccessStatusCode)
+//            {
+//                // Handle success
+//            }
+//        }
+
+
+        DataRealTime lstData = new DataRealTime();
 
             var json = JsonSerializer.Serialize(new { timestamp = DateTime.Now.ToString("o") });
             var content = new StringContent(json, Encoding.UTF8, "application/json");
