@@ -14,13 +14,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace SQLiteViewer;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow : Window, INotifyPropertyChanged
 {
     public MainWindow()
     {
@@ -104,29 +106,6 @@ public partial class MainWindow : Window
 
             dataGrid.ItemsSource = items;
 
-            //var groupedResults = items
-            //    .Select(row =>
-            //    {
-            //        string jsonColumnContent = row.Json;
-            //        if (string.IsNullOrEmpty(jsonColumnContent)) return null;
-            //        return JsonNode.Parse(jsonColumnContent);
-            //    })
-            //    .Where(inner => inner != null)
-            //    .GroupBy(inner => inner["NameID"]?.ToString())
-            //    .Select(group => new
-            //    {
-            //        NameID = group.Key,
-            //        // We create a collection of DateTimePoints for LiveCharts
-            //        ChartPoints = group.Select(node => new
-            //        {
-            //            Time = DateTime.Parse(node["TimeRefresh"]?.ToString() ?? DateTime.Now.ToString()),
-            //            Value = ConvertToDouble(ExtractSmartValue(node["Value"]))
-            //        })
-            //        .OrderBy(p => p.Time) // Ensure chronological order for the line
-            //        .ToList()
-            //    })
-            //    .ToList();
-
             // Now groupedResults is List<SensorGroup>, no more 'dynamic' headache!
             List<SensorGroup> groupedResults = items
                 .Select(row => JsonNode.Parse((string)row.Json))
@@ -155,39 +134,40 @@ public partial class MainWindow : Window
     }
 
     // This property should be bound to your Chart in XAML
-    public ISeries[] Series { get; set; }
-    public Axis[] XAxes { get; set; }
+    private ISeries[] _series;
+    private Axis[] _xAxes;
 
-    private void LoadChart(List<SensorGroup> groupedResults)
+    public ISeries[] Series
+    {
+        get => _series;
+        set
+        {
+            _series = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public Axis[] XAxes
+    {
+        get => _xAxes;
+        set
+        {
+            _xAxes = value;
+            OnPropertyChanged();
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private void LoadChart1(List<SensorGroup> groupedResults)
     {
         var seriesList = new List<ISeries>();
-
-        //foreach (var group in groupedResults)
-        //{
-        //    seriesList.Add(new LineSeries<DateTimePoint>
-        //    {
-        //        Name = group.NameID,
-        //        Values = group.ChartPoints.Select(p => new DateTimePoint(p.Time, p.Value)).ToArray(),
-        //        Fill = null, // Removes the area fill under the line
-        //        GeometrySize = 5 // Size of the dots on the line
-        //    });
-        //}
-
-        //foreach (var group in groupedResults)
-        //{
-        //    // 1. Cast the dynamic ChartPoints to a typed List
-        //    var points = (IEnumerable<MyDataPoint>)group.ChartPoints;
-
-        //    seriesList.Add(new LineSeries<DateTimePoint>
-        //    {
-        //        Name = group.NameID,
-        //        // 2. Now the compiler knows exactly what 'p' is
-        //        Values = points.Select(p => new DateTimePoint(p.Time, p.Value)).ToList(),
-
-        //        Fill = null,
-        //        GeometrySize = 5
-        //    });
-        //}
+       
         // This is now perfectly type-safe
         foreach (SensorGroup group in groupedResults)
         {
@@ -210,6 +190,49 @@ public partial class MainWindow : Window
         {
             Labeler = value => new DateTime((long)value).ToString("HH:mm:ss"),
             LabelsRotation = 15,
+            UnitWidth = TimeSpan.FromSeconds(1).Ticks,
+            MinStep = TimeSpan.FromSeconds(1).Ticks
+        }
+        };
+    }
+    private void LoadChart(List<SensorGroup> groupedResults)
+    {
+        if (groupedResults == null || !groupedResults.Any()) return;
+
+        var seriesList = new List<ISeries>();
+
+        foreach (var group in groupedResults)
+        {
+            // FIX 1: Ensure data is sorted by Time. 
+            // LiveCharts draws points in the order they appear in the list.
+            // Out-of-order data creates "spider-web" lines.
+            var sortedPoints = group.ChartPoints
+                .OrderBy(p => p.Time)
+                .Select(p => new DateTimePoint(p.Time, p.Value))
+                .ToList();
+
+            seriesList.Add(new LineSeries<DateTimePoint>
+            {
+                Name = group.NameID,
+                Values = sortedPoints,
+                Fill = null,
+                GeometrySize = 5
+            });
+        }
+
+        // FIX 3: Assign to properties that trigger OnPropertyChanged()
+        // Make sure your Series and XAxes properties call OnPropertyChanged in their setters!
+        Series = seriesList.ToArray();
+
+        XAxes = new Axis[]
+        {
+        new Axis
+        {
+            // FIX 4: Use the built-in DateTime format helper for safer scaling
+            Labeler = value => value <= 0 ? "" : new DateTime((long)value).ToString("HH:mm:ss"),
+            LabelsRotation = 15,
+            
+            // UnitWidth and MinStep are crucial for DateTime axes
             UnitWidth = TimeSpan.FromSeconds(1).Ticks,
             MinStep = TimeSpan.FromSeconds(1).Ticks
         }
