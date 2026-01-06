@@ -11,11 +11,20 @@
           AutoGenerateColumns="True" 
           IsReadOnly="True" 
           GridLinesVisibility="All" />-->
-        <DataGrid x:Name="dataGrid" 
+        <!--<DataGrid x:Name="dataGrid" 
           AutoGenerateColumns="True"
           EnableRowVirtualization="True"
           VirtualizingStackPanel.VirtualizationMode="Recycling"
           ScrollViewer.CanContentScroll="True">
-        </DataGrid>
+        </DataGrid>-->
+        <StackPanel>
+            <TextBlock Text="Select Columns to Show:" Margin="10,5"/>
+            <WrapPanel x:Name="ColumnTogglePanel" Margin="10,0,10,10" />
+            <StackPanel Orientation="Horizontal">
+                <Button Click="SelectNone_Click" Content="AllUnchecked"></Button>
+                <Button Click="Button_Save_Click" Content="SaveSettings" HorizontalAlignment="Right"></Button>
+            </StackPanel>
+            <DataGrid x:Name="dataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" />
+        </StackPanel>
     </Grid>
 </Window>
