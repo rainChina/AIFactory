@@ -12,12 +12,45 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Button Content="Open SQLite File" Click="OpenFile_Click" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top"/>
-        <DataGrid Grid.Row="1" x:Name="dataGrid" AutoGenerateColumns="True" Margin="10"/>
-        <lvc:CartesianChart Grid.Row="2" Name="lvcChart"
-            Series="{Binding Series}"
-            XAxes="{Binding XAxes}"
-           >
-        </lvc:CartesianChart>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Menu -->
+        <Menu Grid.Row="0" Grid.ColumnSpan="2">
+            <MenuItem Header="Load" Click="OpenFile_Click"/>
+            <MenuItem Header="chart" Click="ChartView_Click"/>
+            <MenuItem Header="column" Click="DataView_Click"/>
+        </Menu>
+        <!--<Button Content="Open SQLite File" Click="OpenFile_Click" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top"/>-->
+
+
+        <ListBox Grid.Row="1" Grid.Column="0" x:Name="TraceSelector"
+         ItemsSource="{Binding TraceNames}"
+         SelectionMode="Extended"
+         SelectionChanged="TraceSelector_SelectionChanged"
+         Margin="10" />
+
+
+        <!-- Chart -->
+        <lvc:CartesianChart Grid.Row="1" Grid.Column="1"
+             Series="{Binding FilteredSeries}"
+             XAxes="{Binding XAxes}"
+             Name="lvcChart"
+             Margin="10"/>
+
+        <DataGrid Grid.Row="2" x:Name="statsGrid" Grid.ColumnSpan="2" ItemsSource="{Binding StatisticsList}" AutoGenerateColumns="False" Margin="10" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Name" Binding="{Binding NameID}" />
+                <DataGridTextColumn Header="Start Time" Binding="{Binding StartTime}" />
+                <DataGridTextColumn Header="End Time" Binding="{Binding EndTime}" />
+                <DataGridTextColumn Header="Duration" Binding="{Binding Duration}" />
+                <DataGridTextColumn Header="Min" Binding="{Binding Min}" />
+                <DataGridTextColumn Header="Max" Binding="{Binding Max}" />
+                <DataGridTextColumn Header="Average" Binding="{Binding Average}" />
+                <DataGridTextColumn Header="Count" Binding="{Binding Count}"  Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
     </Grid>
 </Window>
